@@ -9,7 +9,6 @@ from compositor.selector import select
 from compositor.compose import composite_elements
 from computervision.extract_coordinates import extract_coordinates
 from computervision.mediapipe.orchestrator import orchestrate_pipeline
-from computervision.imageloader import load_image
 from hardware.camera.camera_manager import CameraManager
 
 #runs once
@@ -20,20 +19,18 @@ camera.start()
 def on_press(channel = None):
     if USE_CAMERA:
         #capture live image from camera if camera is connected
-        captured_frame = camera.capture()
+        captured_frame = camera.preview()
     else:
-        captured_frame = load_image("3.png")
+        captured_frame = camera.capture()
 
-    # print('PRESSING THE BUTTON')
     #run computer vision pipeline
 
     orchestrated = orchestrate_pipeline(captured_frame)
-
     # Get Region
     torso_crop = extract_coordinates(orchestrated , captured_frame)
     #composite elements 
     results = extract_color(torso_crop)
-    
+
     categorised = classify(results)
 
     selection = select(categorised)
