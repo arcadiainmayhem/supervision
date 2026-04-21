@@ -1,19 +1,12 @@
 #!/bin/bash
-# SUPERVISION Pi Setup Script
+# SUPERVISION Pi Setup Script for Python 3.11
 # Run once on a fresh Pi after cloning the repo
 
-echo "Installing Python 3.11..."
-sudo apt install -y build-essential libssl-dev libffi-dev zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libreadline-dev libsqlite3-dev libbz2-dev
-wget https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz
-tar -xf Python-3.11.9.tgz
-cd Python-3.11.9
-./configure --enable-optimizations
-make -j4
-sudo make altinstall
-cd ..
+echo "Installing system dependencies..."
+sudo apt install -y python3-picamera2 libcap-dev
 
 echo "Creating virtual environment..."
-python3.11 -m venv venv --system-site-packages
+python3 -m venv venv --system-site-packages
 source venv/bin/activate
 
 echo "Installing dependencies..."
