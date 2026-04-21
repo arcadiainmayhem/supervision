@@ -4,8 +4,8 @@ import cv2
 import numpy as np
 import mediapipe as mp
 from mediapipe.tasks import python
-from mediapipe.tasks.python.vision import drawing_utils
-from mediapipe.tasks.python.vision import drawing_styles
+# from mediapipe.tasks.python.vision import drawing_utils
+# from mediapipe.tasks.python.vision import drawing_styles
 from mediapipe.tasks.python import vision
 
 
@@ -33,29 +33,29 @@ def detect_pose(image, detector):
     detection_result = detector.detect(mp_image)
 
     #process detection result , visualisation only
-    annotated_image = draw_landmarks_on_image(rgb , detection_result)
+    #annotated_image = draw_landmarks_on_image(rgb , detection_result)
 
-    detected_result = cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR)
+    #detected_result = cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR)
 
     return detection_result
 
 
-def draw_landmarks_on_image(rgb_image , detection_result):
+# def draw_landmarks_on_image(rgb_image , detection_result):
 
-    pose_landmarks_list = detection_result.pose_landmarks
-    annoted_image = np.copy(rgb_image)
+#     pose_landmarks_list = detection_result.pose_landmarks
+#     annoted_image = np.copy(rgb_image)
 
-    pose_landmark_style = drawing_styles.get_default_pose_landmarks_style()
-    pose_connection_style = drawing_utils.DrawingSpec(color = ( 0 , 255 , 0 ), thickness = 2)
+#     pose_landmark_style = drawing_styles.get_default_pose_landmarks_style()
+#     pose_connection_style = drawing_utils.DrawingSpec(color = ( 0 , 255 , 0 ), thickness = 2)
     
-    for pose_landmarks in pose_landmarks_list:
+#     for pose_landmarks in pose_landmarks_list:
         
-        drawing_utils.draw_landmarks(
-            image = annoted_image,
-            landmark_list = pose_landmarks,
-            connections = vision.PoseLandmarksConnections.POSE_LANDMARKS,
-            landmark_drawing_spec = pose_landmark_style,
-            connection_drawing_spec = pose_connection_style
-        )
+#         drawing_utils.draw_landmarks(
+#             image = annoted_image,
+#             landmark_list = pose_landmarks,
+#             connections = vision.PoseLandmarksConnections.POSE_LANDMARKS,
+#             landmark_drawing_spec = pose_landmark_style,
+#             connection_drawing_spec = pose_connection_style
+#         )
 
-    return annoted_image
+#     return annoted_image
