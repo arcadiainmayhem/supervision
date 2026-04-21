@@ -20,6 +20,11 @@ def run_pipeline(frame):
     orchestrated = orchestrate_pipeline(frame)
     # Get Region
     torso_crop = extract_coordinates(orchestrated , frame)
+
+    if torso_crop is None:
+        print("No Person Detected - skipping pipeline")
+        return
+
     #composite elements 
     results = extract_color(torso_crop)
 

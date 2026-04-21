@@ -10,6 +10,9 @@ python3 -m venv venv --system-site-packages
 source venv/bin/activate
 
 echo "Installing dependencies..."
-pip install -r requirements.txt
+pip install -r requirements_pi.txt
+
+echo "Downloading MediaPipe models..."
+wget -P computervision/mediapipe/detection/ https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/latest/pose_landmarker_full.task
 
 echo "Done! Run 'source venv/bin/activate' then 'python main.py'"
