@@ -10,10 +10,7 @@ class CameraManager:
     
     def start(self):
 
-        if self.cam is None:
-                print("DEVMODE : No Camera Started")
-                self.camera_index = DEV_CAMERA_INDEX
-                return
+
         if self.cam is None:
             from picamera2 import Picamera2
             self.cam = Picamera2()
@@ -58,6 +55,12 @@ class CameraManager:
                    if key == 32:
                         cv2.destroyAllWindows()
                         return frame
+
+
+    def preview_frame(self):
+        if self.cam is not None:
+            return self.cam.capture_array()
+        return None
 
     def stop(self):
         if self.cam is not None:

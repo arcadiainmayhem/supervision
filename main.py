@@ -1,6 +1,6 @@
 import time
 from hardware.button_listener import start
-
+import cv2
 from hardware.camera.camera_constants import *
 from core.constants import *
 from computervision.extractor import extract_color
@@ -16,18 +16,10 @@ camera= CameraManager()
 #start camera
 camera.start()
 
-def on_press(channel = None):
-    if USE_CAMERA:
-        #capture live image from camera if camera is connected
-        captured_frame = camera.preview()
-    else:
-        captured_frame = camera.capture()
-
-    #run computer vision pipeline
-
-    orchestrated = orchestrate_pipeline(captured_frame)
+def run_pipeline(frame):
+    orchestrated = orchestrate_pipeline(frame)
     # Get Region
-    torso_crop = extract_coordinates(orchestrated , captured_frame)
+    torso_crop = extract_coordinates(orchestrated , frame)
     #composite elements 
     results = extract_color(torso_crop)
 
@@ -36,12 +28,7 @@ def on_press(channel = None):
     selection = select(categorised)
     
     output = composite_elements(selection)
-
-
-    #save the card  
-
-
-    #send to printer    
+   
     print(results)
     print(categorised)
     print(selection)
@@ -50,9 +37,23 @@ def on_press(channel = None):
    
     output.show()
 
-start(on_press)
+if DEV_MODE:
+    while True:
+        frame = camera.preview_frame()                 
+        cv2.imshow("Preview" , frame)
+        key = cv2.waitKey(1)
+        if key == 32:
+            cv2.destroyAllWindows()
+            run_pipeline(frame)
 
-print("Running!")
+else:
+    from hardware.button_listener import start
+    def on_press(channel = None):
+        frame = camera.capture()
+        run_pipeline(frame)
 
-while True:
-    time.sleep(0.1)
+    start(on_press)
+    print("Running!")
+
+    while True:
+        time.sleep(0.1)
