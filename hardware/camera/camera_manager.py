@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from hardware.camera.camera_constants import *
+from core.installation_constants import *
 
 
 class CameraManager:
@@ -10,6 +11,9 @@ class CameraManager:
     
     def start(self):
 
+        if DEV_MODE:
+            print("DEV_MODE: Camera Not Started")
+            return
 
         if self.cam is None:
             from picamera2 import Picamera2
@@ -41,6 +45,11 @@ class CameraManager:
 
         # if DEV_MODE:
         #      return cv2.imread(DEV_IMAGE_PATH)
+
+        if DEV_MODE:
+            print("DEV_MODE: Camera Not Started")
+            return
+        
         if self.cam is not None:
              frame = self.cam.capture_array()
              return frame

@@ -16,4 +16,3 @@ def weighted_pick(options):
     random_index = random.randint(0,len(options) -1 )
     
     return options[random_index]
-

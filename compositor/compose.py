@@ -1,11 +1,10 @@
 
 from PIL import Image, ImageDraw
-from compositor.constants import CARD_WIDTH , CARD_HEIGHT , CARD_BG_COLOR 
-from compositor.constants import ELEMENT_POSITIONS
-from compositor.shapes import draw_shapes
+from compositor.obelisk_card_constants import CARD_WIDTH , CARD_HEIGHT , CARD_BG_COLOR 
+from compositor.obelisk_card_constants import ELEMENT_POSITIONS , Z_ORDER
+from core.placeholder_shapes import draw_shapes
 
 
-Z_ORDER = ["background" , "limbs" ,"body" , "head", "detail" , "accessory"]
 
 
 

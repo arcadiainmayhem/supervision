@@ -1,6 +1,6 @@
 
 
-from hardware.config import *
+from hardware.hardware_config import *
 
 
 DEV_MODE = True

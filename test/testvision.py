@@ -3,7 +3,7 @@
 import cv2
 import numpy as np
 from computervision.imageloader import load_image, get_region
-from core.constants import *
+from core.installation_constants import *
 from computervision.extractor import extract_color
 from computervision.classifier import classify
 from compositor.selector import select

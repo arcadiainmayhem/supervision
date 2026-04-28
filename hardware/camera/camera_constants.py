@@ -1,4 +1,3 @@
-DEV_MODE = True
 USE_CAMERA = False
 
 CAMERA_WIDTH = 1920
@@ -19,4 +18,4 @@ PI_CAMERA_INDEX = 0
 PI_QUALITY = 90
 
 
-DEV_IMAGE_PATH = "2.jpg"
+DEV_IMAGE_PATH = "test/3.png"

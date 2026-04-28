@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from core.constants import *
+from core.installation_constants import *
 
 def extract_color(hsv_region):
 

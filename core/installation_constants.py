@@ -1,6 +1,9 @@
 
+import platform
+import os
 
 #REGION BOUNDARIES
+DEV_MODE = platform.system() != "Linux" 
 
 
 TOP_REGION_END = 1/3 #top third
@@ -9,6 +12,9 @@ MIDDLE_REGION_START = 1/3
 MIDDLE_REGION_END = 2/3
 
 BOTTOM_REGION_START = 2/3
+
+
+
 
 
 #HUE SATURATION VALUES THRESHOLDS
@@ -28,3 +34,5 @@ VALUE_LIGHT_MIN = 170 # above = light
 #CAMERA SETTINGS
 CAMERA_RESOLUTION = ( 1920 , 1080)
 CAMERA_INDEX = 0
+
+

@@ -1,5 +1,5 @@
 
-from core.constants import *
+from core.installation_constants import *
 
 def classify(extracted):
 

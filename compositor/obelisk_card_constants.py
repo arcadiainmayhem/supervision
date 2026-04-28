@@ -17,3 +17,6 @@ ELEMENT_POSITIONS = {
     "detail":     (CARD_WIDTH * 0.40, CARD_HEIGHT * 0.21, CARD_WIDTH * 0.60, CARD_HEIGHT * 0.34),
     "accessory":  (CARD_WIDTH * 0.60, CARD_HEIGHT * 0.11, CARD_WIDTH * 0.80, CARD_HEIGHT * 0.26),
 }
+
+
+Z_ORDER = ["background" , "limbs" ,"body" , "head", "detail" , "accessory"]

@@ -1,4 +1,4 @@
-from core.constants import *
+from core.installation_constants import *
 
 def extract_coordinates(mp_results , image):
     

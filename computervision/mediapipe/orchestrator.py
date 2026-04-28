@@ -5,7 +5,7 @@ import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
-from computervision.imageloader import load_image
+
 from computervision.mediapipe.detection.posedetection import detect_pose , setup_pose_object
 
 #Configuring MP to run
@@ -13,11 +13,10 @@ BaseOptions = mp.tasks.BaseOptions
 
 
 
-def orchestrate_pipeline(image):
+def orchestrate_detection_pipeline(image , detector):
  
-    detected = setup_pose_object()
-    
-    pose_detection_result = detect_pose(image , detected)
+    #orchestrating pose detection results
+    pose_detection_result = detect_pose(image , detector)
 
 
     return {
