@@ -1,9 +1,8 @@
 
 
 from hardware.hardware_config import *
+from core.installation_constants import DEV_MODE
 
-
-DEV_MODE = True
 
 if not DEV_MODE:
     import RPi.GPIO as GPIO
