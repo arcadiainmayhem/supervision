@@ -30,7 +30,9 @@ class ObeliskDirector():
         self.camera.start()
 
         #obelisk variables
-        self.isWatching = False
+        self.isWatching = True
+        self.passive_continuous_observation(None)
+        
         self.isPrinting = False
 
         #current running data
@@ -39,7 +41,7 @@ class ObeliskDirector():
         #initilaise mediapose object
         self.detector = setup_pose_object()
         
-
+        
 
     def start_watching(self):
         self.isWatching = True
