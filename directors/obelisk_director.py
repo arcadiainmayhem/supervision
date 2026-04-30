@@ -25,6 +25,7 @@ class ObeliskDirector():
     def __init__(self):
         #runs once
         self.camera = CameraManager()
+        print("Camera Starting Up")
         #start camera
         self.camera.start()
 
@@ -52,6 +53,8 @@ class ObeliskDirector():
         if DEV_MODE:
             return load_image(DEV_IMAGE_PATH)
         else:
+            print("Dev Mode", DEV_MODE)
+            print("Camera Object", self.camera.cam)
             return self.camera.capture()
         
     def read_frame(self):
