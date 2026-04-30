@@ -69,6 +69,7 @@ class ObeliskDirector():
             #update movement variance
             #update dwell time
             #write to visitor
+            print("Camera is Observing")
             frame = self.camera.preview_frame()
             if frame is not None:
                 cv2.imshow("Camera Preview", frame)
