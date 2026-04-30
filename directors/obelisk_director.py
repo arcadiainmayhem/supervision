@@ -120,9 +120,12 @@ class ObeliskDirector():
     def produce_selphy_card(self,visitor):
         elements = visitor["selected_elements"]
         output_image = composite_elements(elements)
+        output_image.save("test/output.png")
         if DEV_MODE:
             output_image.show()
-        
+        else:
+            self._print_selphy_card(output_image)
+            
         return output_image
 
     def _print_selphy_card(self, output_image ):

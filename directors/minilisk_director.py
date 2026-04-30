@@ -30,7 +30,9 @@ class MiniliskDirector():
             output.show()
         else:
             self._print_thermal_slip(output)
-
+            
+        return output
+    
     def _print_thermal_slip(self, visitor):
         #send to THERMAL PRINTER via python escpos
         pass
