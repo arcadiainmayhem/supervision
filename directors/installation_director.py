@@ -43,6 +43,7 @@ class InstallationDirector :
         self.obelisk_director.start_watching()
         #setup button listener + initialise
         start(self._run_encounter)
+
         #signal to printer that its ready
 
         #signal to microphone 
@@ -74,7 +75,7 @@ class InstallationDirector :
     def _run_encounter(self, channel = None):
         #channel might be a GPIO pin number , a keyboard event or None
         #we dont use it, but accept it gracefully
-
+        print("Button Pressed - Encounter Triggered")
         #check button press / trigger -> gets observation visitor dict from obelisk
         #create visitor
         #guard against running twice
