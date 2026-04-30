@@ -30,8 +30,8 @@ class ObeliskDirector():
         self.camera.start()
 
         #obelisk variables
-        self.isWatching = True
-        self.passive_continuous_observation(None)
+        self.isWatching = False
+    
         
         self.isPrinting = False
 
