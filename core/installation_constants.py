@@ -3,8 +3,8 @@ import platform
 import os
 
 #REGION BOUNDARIES
-#DEV_MODE = platform.system() != "Linux" 
-DEV_MODE = True
+DEV_MODE = platform.system() != "Linux" 
+#DEV_MODE = True
 
 TOP_REGION_END = 1/3 #top third
 
