@@ -19,6 +19,7 @@ def start(on_press):
         keyboard.add_hotkey('space',on_press)
         print("Button Listener Ready")
     else:
+        print("Button Pressed")
         GPIO.setmode(GPIO.BCM)
 
         GPIO.setup(BUTTON_TRIGGER_PIN, GPIO.IN , pull_up_down= GPIO.PUD_UP)
@@ -29,4 +30,4 @@ def start(on_press):
             callback= on_press,
             bouncetime=BUTTON_BOUNCE_TIME
         )
-        print("Button Listener Ready")
+        
