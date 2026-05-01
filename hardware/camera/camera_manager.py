@@ -26,25 +26,10 @@ class CameraManager:
             self.cam.configure(config)
             self.cam.start()
             
-        # else:
-        #     self.camera_index = PI_CAMERA_INDEX
-
-        
-        # if self.cam is None:
-        #     self.cam = cv2.VideoCapture(self.camera_index)
-        #     print("Cam Running!")
         print("Cam Runnning")
 
     def capture(self):
-        #read() return BGR
-        # if self.cam is not None:
-        #     ret , frame = self.cam.read()
-        #     if ret:
-        #         return frame
-        # return None
 
-        # if DEV_MODE:
-        #      return cv2.imread(DEV_IMAGE_PATH)
 
         if DEV_MODE:
             print("DEV_MODE: Camera Not Started")
