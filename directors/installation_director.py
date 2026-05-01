@@ -4,7 +4,8 @@ from core.visitor_state import create_visitor_state
 from core.decider.installation_decider import decide_score
 from hardware.button.button_listener import register_trigger_button
 from datetime import datetime
-
+import os 
+import signal
 #main coordinator 
 
 class InstallationDirector :
@@ -121,4 +122,5 @@ class InstallationDirector :
         self.stop()
         #additional cleanup
         #cleanup for
-        raise KeyboardInterrupt
+        #shutdown os
+        os.system("sudo shutdown now")
