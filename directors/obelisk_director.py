@@ -72,16 +72,17 @@ class ObeliskDirector():
         #read frames for passive sampling
         pass
 
-    def passive_continuous_observation(self, visitor):
+    def passive_continuous_observation(self):
         while self.isWatching:
             #TODO: TREADING
                 with self.frame_lock: #acquire lock
-                    print("Camera is Observing")
                     frame = self.camera.preview_frame()
                 if frame is not None:
+                    print("Camera is Observing")
                     cv2.imshow("Camera Preview", frame)
                     cv2.waitKey(1)
-            
+                #timing issue
+                time.sleep(0.03)
 
     def observe(self,visitor):
         frame = self._capture()
