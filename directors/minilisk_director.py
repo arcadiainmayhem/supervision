@@ -25,12 +25,12 @@ class MiniliskDirector():
         print("Composing thermal..")
         output = compose_slip(assembled)
         print("Showing thermal..")
-    
+        output.save("test/output.png")
         if DEV_MODE:
             output.show()
         else:
             self._print_thermal_slip(output)
-            
+
         return output
     
     def _print_thermal_slip(self, visitor):

@@ -1,6 +1,7 @@
 import time
 from hardware.button.button_listener import start
 import cv2
+import threading
 from hardware.camera.camera_constants import *
 from core.installation_constants import *
 from computervision.extractor import extract_color
@@ -35,6 +36,10 @@ class ObeliskDirector():
         
         self.isPrinting = False
 
+        #theading
+        self.preview_thread = None
+        self.frame_lock = threading.lock() #like a flag - free or taken
+
         #current running data
         self.current_observation = None
 
@@ -45,7 +50,10 @@ class ObeliskDirector():
 
     def start_watching(self):
         self.isWatching = True
-        
+        self.preview_thread = threading.Thread(target=self.passive_continuous_observation , args =(None,))
+        self.preview_thread.daemon = True
+        self.preview_thread.start()
+
     def stop_watching(self):
         self.isWatching = False
         
@@ -57,7 +65,8 @@ class ObeliskDirector():
         else:
             print("Dev Mode", DEV_MODE)
             print("Camera Object", self.camera.cam)
-            return self.camera.capture()
+            with self.frame_lock:
+             return self.camera.capture()
         
     def read_frame(self):
         #read frames for passive sampling
@@ -66,16 +75,12 @@ class ObeliskDirector():
     def passive_continuous_observation(self, visitor):
         while self.isWatching:
             #TODO: TREADING
-            #check for presence
-            #check for microphone
-            #update movement variance
-            #update dwell time
-            #write to visitor
-            print("Camera is Observing")
-            frame = self.camera.preview_frame()
-            if frame is not None:
-                cv2.imshow("Camera Preview", frame)
-                cv2.waitKey(1)
+                with self.frame_lock: #acquire lock
+                    print("Camera is Observing")
+                    frame = self.camera.preview_frame()
+                if frame is not None:
+                    cv2.imshow("Camera Preview", frame)
+                    cv2.waitKey(1)
             
 
     def observe(self,visitor):
@@ -125,7 +130,7 @@ class ObeliskDirector():
             output_image.show()
         else:
             self._print_selphy_card(output_image)
-            
+
         return output_image
 
     def _print_selphy_card(self, output_image ):
@@ -133,5 +138,6 @@ class ObeliskDirector():
         print("Connecting to Printer - Print Selphy Card")#
 
     def _stop_camera(self):
+        self.stop_watching() #stop thread before stopping camera
         self.camera.stop()
 

@@ -2,7 +2,7 @@ from .obelisk_director import ObeliskDirector
 from .minilisk_director import MiniliskDirector
 from core.visitor_state import create_visitor_state
 from core.decider.installation_decider import decide_score
-from hardware.button.button_listener import start
+from hardware.button.button_listener import register_trigger_button
 from datetime import datetime
 
 #main coordinator 
@@ -42,7 +42,7 @@ class InstallationDirector :
         #button listener
         self.obelisk_director.start_watching()
         #setup button listener + initialise
-        start(self._run_encounter)
+        register_trigger_button(self._run_encounter)
 
         #signal to printer that its ready
 
@@ -54,21 +54,6 @@ class InstallationDirector :
         return visitor
     
     
-
-    #pause
-    def stop(self):
-        self.isActive = False
-        #tell obelisk to stop watching
-        #button on standby
-        #release camera
-        self.obelisk_director._stop_camera()
-        #stop printers
-
-    #full shutdown
-    def shutdown(self):
-        self.stop()
-        #additional cleanup
-
     def determine_visitor_id(self):
         return len(self.encounter_history ) + 1
 
@@ -77,8 +62,7 @@ class InstallationDirector :
         #we dont use it, but accept it gracefully
         print("Button Pressed - Encounter Triggered")
         #check button press / trigger -> gets observation visitor dict from obelisk
-        #create visitor
-        #guard against running twice
+        #create visitor + guard against running twice
         if self.is_encounter_running:
             return
         self.is_encounter_running = True
@@ -122,3 +106,19 @@ class InstallationDirector :
         self.current_visitor_score = None
         self.is_encounter_running = False
      
+
+         #pause
+    def stop(self):
+        self.isActive = False
+        #tell obelisk to stop watching
+        #button on standby
+        #release camera
+        self.obelisk_director._stop_camera()
+        #stop printers
+
+    #full shutdown
+    def shutdown(self):
+        self.stop()
+        #additional cleanup
+        #cleanup for main
+        raise KeyboardInterrupt

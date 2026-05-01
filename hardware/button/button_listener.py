@@ -13,13 +13,12 @@ else:
 
 
 
-def start(on_press):
+def register_trigger_button(on_press):
     if DEV_MODE:
         print("Dev mode - press SPACE to trigger")
         keyboard.add_hotkey('space',on_press)
-        print("Button Listener Ready")
+        print("Trigger Button Ready")
     else:
-        print("Button Pressed")
         GPIO.setmode(GPIO.BCM)
 
         GPIO.setup(BUTTON_TRIGGER_PIN, GPIO.IN , pull_up_down= GPIO.PUD_UP)
@@ -29,5 +28,25 @@ def start(on_press):
             GPIO.FALLING,
             callback= on_press,
             bouncetime=BUTTON_BOUNCE_TIME
+        )
+        
+
+
+
+def register_shutdown_button(on_press):
+    if DEV_MODE:
+        print("Dev mode - press SPACE to trigger")
+        keyboard.add_hotkey('space',on_press)
+        print("Shutdown Button Ready")
+    else:
+        GPIO.setmode(GPIO.BCM)
+
+        GPIO.setup(SHUTDOWN_TRIGGER_PIN, GPIO.IN , pull_up_down= GPIO.PUD_UP)
+
+        GPIO.add_event_detect(
+            SHUTDOWN_TRIGGER_PIN,
+            GPIO.FALLING,
+            callback= on_press,
+            bouncetime=SHUTDOWN_BUTTON_BOUNCE_TIME
         )
         
