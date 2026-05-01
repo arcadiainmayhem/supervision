@@ -1,5 +1,5 @@
 import time
-from hardware.button.button_listener import start
+from hardware.button.button_listener import register_trigger_button
 import cv2
 import threading
 from hardware.camera.camera_constants import *
@@ -36,7 +36,7 @@ class ObeliskDirector():
         
         self.isPrinting = False
 
-        #theading
+        #theadings
         self.preview_thread = None
         self.frame_lock = threading.lock() #like a flag - free or taken
 
