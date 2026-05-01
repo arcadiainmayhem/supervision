@@ -50,7 +50,7 @@ class ObeliskDirector():
 
     def start_watching(self):
         self.isWatching = True
-        self.preview_thread = threading.Thread(target=self.passive_continuous_observation , args =(None,))
+        self.preview_thread = threading.Thread(target=self.passive_continuous_observation)
         self.preview_thread.daemon = True
         self.preview_thread.start()
 

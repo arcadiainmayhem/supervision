@@ -15,8 +15,9 @@ def main():
     try:
         while True:
             time.sleep(0.1)
+
     except KeyboardInterrupt:
-        installation.shutdown()
+        installation.exit_program()
         print("Installation Shutdown Cleanly")    
 
 
