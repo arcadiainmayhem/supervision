@@ -38,7 +38,7 @@ class ObeliskDirector():
 
         #theadings
         self.preview_thread = None
-        self.frame_lock = threading.lock() #like a flag - free or taken
+        self.frame_lock = threading.Lock() #like a flag - free or taken
 
         #current running data
         self.current_observation = None
