@@ -124,3 +124,9 @@ class InstallationDirector :
         #cleanup for
         #shutdown os
         os.system("sudo shutdown now")
+
+
+    #debuggin
+    def exit_program(self):
+        self.stop()
+        os.kill(os.getpid(), signal.SIGINT)
