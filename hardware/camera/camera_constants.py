@@ -18,4 +18,4 @@ PI_CAMERA_INDEX = 0
 PI_QUALITY = 90
 
 
-DEV_IMAGE_PATH = "test/3.png"
+DEV_IMAGE_PATH = "test/6.jpg"

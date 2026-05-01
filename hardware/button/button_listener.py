@@ -36,7 +36,7 @@ def register_trigger_button(on_press):
 def register_shutdown_button(on_press):
     if DEV_MODE:
         print("Dev mode - press SPACE to trigger")
-        keyboard.add_hotkey('space',on_press)
+        keyboard.add_hotkey('q',on_press)
         print("Shutdown Button Ready")
     else:
         GPIO.setmode(GPIO.BCM)

@@ -17,17 +17,20 @@ def create_visitor_state(visitor_number):
     "color_value":0,
 
     #Poses
-    "pose_landmarks" : None,
-    "detected_regions" : None,
+    # "pose_landmarks" : None,
+    # "detected_regions" : None,
+
+    "face_detected" : False,
+    "body_detected" : False,
+    "hand_detected" : False,
+    
+    "gestures_detected": None,
 
     #Extracted from Vision - Aura
 
     "energy" : None,
     "nervousness":  None ,
     "calmness": None,
-    "face_detected" : False,
-    "body_detected" : False,
-    "hand_detected" : False,
 
     #Classification
     "hue_category" : None,

@@ -2,19 +2,19 @@ from core.installation_constants import *
 
 def extract_coordinates(mp_results , image):
     
-    pose = mp_results["pose"]
+    body = mp_results["body"]
     
-    #guard against crashing when no pose
-    if not pose.pose_landmarks:
+    #guard against crashing when no body detected
+    if not body.pose_landmarks:
         IMG_HEIGHT, IMG_WIDTH = image.shape[:2]
 
-        print("No Pose Detected - using fallback")
+        print("No Body Detected - using fallback")
         middle_start = int(IMG_HEIGHT * MIDDLE_REGION_START) 
         middle_end = int(IMG_HEIGHT * MIDDLE_REGION_END)
 
         return image[middle_start : middle_end, :]
  
-    landmarks = pose.pose_landmarks[0]
+    landmarks = body.pose_landmarks[0]
 
     #assign to landmark points
     left_shoulder = landmarks[12]

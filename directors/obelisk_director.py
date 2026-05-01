@@ -8,8 +8,14 @@ from computervision.extractor import extract_color
 from computervision.classifier import classify
 from computervision.imageloader import load_image
 from computervision.extract_coordinates import extract_coordinates
+
+
 from computervision.mediapipe.orchestrator import orchestrate_detection_pipeline
-from computervision.mediapipe.detection.posedetection import setup_pose_object
+from computervision.mediapipe.detection.bodydetection import setup_body_object
+from computervision.mediapipe.detection.facedetection import setup_face_object
+from computervision.mediapipe.detection.handdetection import setup_hand_object
+from computervision.mediapipe.detection.gesture_recognizer import setup_gesture_object
+
 from hardware.camera.camera_manager import CameraManager
 from compositor.selector import select
 from compositor.compose import composite_elements
@@ -43,10 +49,11 @@ class ObeliskDirector():
         #current running data
         self.current_observation = None
 
-        #initilaise mediapose object
-        self.detector = setup_pose_object()
-        
-        
+        #initilaise mediapose objects
+        self.body_detector = setup_body_object()
+        self.face_detector = setup_face_object()
+        self.hand_detector = setup_hand_object()
+        self.gesture_recognizer = setup_gesture_object()
 
     def start_watching(self):
         self.isWatching = True
@@ -98,21 +105,41 @@ class ObeliskDirector():
         
         #store in dictionary
         visitor["camera_frame"] = frame
-        print("Detecting Poses...")
-        detected_poses = orchestrate_detection_pipeline(frame , self.detector )
-        region_crop = extract_coordinates(detected_poses , frame) # for specific region crop
-        visitor["pose_detection"] = detected_poses
+
+        print("Detecting Body, Face , Hands...")
+        #parsed from mediapipe
+        detected_results = orchestrate_detection_pipeline(frame , self.body_detector, self.face_detector , self.hand_detector , self.gesture_recognizer )
+
+        region_crop = extract_coordinates(detected_results , frame) # for specific region crop
+        #for gestures
+        gestures = detected_results["gesture"].gestures
+        #writing to visitor state dict
+        visitor["pose_detected"] = detected_results["body"]
+        visitor["face_detected"] = detected_results["face"]
+        visitor["hand_detected"] = detected_results["hand"]   
+        visitor["gestures_detected"] = gestures[0][0].category_name if gestures else None
+
+        # print("Body Results:", detected_results["body"].pose_landmarks)
+        # print("Face Results:", detected_results["face"].face_landmarks)
+        # print("Hand Results:", detected_results["hand"].hand_landmarks)
+        # print("Gesture Results:" , detected_results["gesture"].gestures)
+
         #extracting color values in crop
         print("Extracting Colors..")
         color_results = extract_color(region_crop)
         visitor["color_saturation"] = color_results["average_saturation"]
         visitor["color_value"] = color_results["average_value"]
         visitor["color_hue"] = color_results["dominant_hue"]
+
+
         print("Categorising Results...")
         #classification
         categorised = classify(color_results)
         visitor["hue_category"] = categorised["hue_category"]
         visitor["brightness"] = categorised["brightness"]
+
+
+
         print("Selecting Elements...")
         #selected elements / pngs
         selection = select(categorised)
