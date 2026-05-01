@@ -117,8 +117,8 @@ class InstallationDirector :
         #stop printers
 
     #full shutdown
-    def shutdown(self):
+    def shutdown(self , channel = None):
         self.stop()
         #additional cleanup
-        #cleanup for main
+        #cleanup for
         raise KeyboardInterrupt
