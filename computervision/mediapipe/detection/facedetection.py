@@ -20,7 +20,9 @@ def setup_face_object():
         num_faces = 5,
         min_face_detection_confidence=0.1,
         min_face_presence_confidence=0.1,
-         min_tracking_confidence=0.1
+        min_tracking_confidence=0.1,
+        output_facial_transformation_matrixes = True,
+
         )
     detector = vision.FaceLandmarker.create_from_options(options)
 

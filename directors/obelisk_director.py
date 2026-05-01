@@ -15,6 +15,7 @@ from computervision.mediapipe.detection.bodydetection import setup_body_object
 from computervision.mediapipe.detection.facedetection import setup_face_object
 from computervision.mediapipe.detection.handdetection import setup_hand_object
 from computervision.mediapipe.detection.gesture_recognizer import setup_gesture_object
+from computervision.mediapipe.mediapipe_interpreter import interpret_all_mediapipe_detection
 
 from hardware.camera.camera_manager import CameraManager
 from compositor.selector import select
@@ -109,20 +110,28 @@ class ObeliskDirector():
         print("Detecting Body, Face , Hands...")
         #parsed from mediapipe
         detected_results = orchestrate_detection_pipeline(frame , self.body_detector, self.face_detector , self.hand_detector , self.gesture_recognizer )
+        intepreted_results = interpret_all_mediapipe_detection(detected_results)
 
         region_crop = extract_coordinates(detected_results , frame) # for specific region crop
-        #for gestures
-        gestures = detected_results["gesture"].gestures
+
         #writing to visitor state dict
-        visitor["pose_detected"] = detected_results["body"]
-        visitor["face_detected"] = detected_results["face"]
-        visitor["hand_detected"] = detected_results["hand"]   
-        visitor["gestures_detected"] = gestures[0][0].category_name if gestures else None
+        visitor["face_detected"] = intepreted_results["face_detected"]
+        visitor["face_orientation"] = intepreted_results["face_orientation"]
+        visitor["body_detected"] = intepreted_results["body_detected"]
+        visitor["person_count"] = intepreted_results["person_count"]
+        visitor["gesture_detected"] = intepreted_results["gesture"] if intepreted_results["gesture"] else None
 
         # print("Body Results:", detected_results["body"].pose_landmarks)
         # print("Face Results:", detected_results["face"].face_landmarks)
         # print("Hand Results:", detected_results["hand"].hand_landmarks)
         # print("Gesture Results:" , detected_results["gesture"].gestures)
+
+        print("Face Detected:", visitor["face_detected"])
+        print("Face Orientation:", visitor["face_orientation"])
+        print("Body Detected:", visitor["body_detected"])
+        print("Person Count:" , visitor["person_count"])
+        print("Gesture Detected:" ,  visitor["gesture_detected"])
+
 
         #extracting color values in crop
         print("Extracting Colors..")

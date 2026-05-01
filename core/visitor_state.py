@@ -21,10 +21,14 @@ def create_visitor_state(visitor_number):
     # "detected_regions" : None,
 
     "face_detected" : False,
+    "face_orientation" : None,
+
     "body_detected" : False,
+    "person_count" : None,
+
     "hand_detected" : False,
-    
-    "gestures_detected": None,
+
+    "gesture_detected": None,
 
     #Extracted from Vision - Aura
 

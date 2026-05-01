@@ -18,6 +18,9 @@ def setup_gesture_object():
     options = vision.GestureRecognizerOptions(
         base_options = base_options,
         num_hands = 4,
+        min_hand_detection_confidence = 0.5,
+        min_hand_presence_confidence = 0.5,
+        min_tracking_confidence = 0.5,
         )
     detector = vision.GestureRecognizer.create_from_options(options)
 
@@ -46,8 +49,8 @@ def detect_gesture(image, detector):
     #annotated_image = draw_landmarks_on_image(rgb , detection_result)
 
     #detected_result = cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR)
-    print("Gestures detected:", len(detection_result.gestures) , detection_result.gestures[0][0].category_name)
-    
+    #print("Gestures detected:", len(detection_result.gestures) , detection_result.gestures[0][0].category_name)
+
     return detection_result
 
 

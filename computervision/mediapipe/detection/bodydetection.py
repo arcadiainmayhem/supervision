@@ -17,7 +17,10 @@ def setup_body_object():
     base_options = python.BaseOptions(model_asset_path = MODEL_PATH )
 
     options = vision.PoseLandmarkerOptions(
-        base_options = base_options
+        base_options = base_options,
+        min_pose_detection_confidence = 0.5,
+        min_pose_presence_confidence = 0.5,
+        min_tracking_confidence = 0.5,
         )
     detector = vision.PoseLandmarker.create_from_options(options)
 
