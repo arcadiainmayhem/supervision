@@ -1,7 +1,8 @@
 from .obelisk_director import ObeliskDirector
 from .minilisk_director import MiniliskDirector
 from core.visitor_state import create_visitor_state
-from core.decider.installation_decider import decide_score
+from core.decider.installation_decider import decide
+from computervision.interpreter.interpretation_director import intepret_everything
 from hardware.button.button_listener import register_trigger_button
 from datetime import datetime
 import os 
@@ -67,19 +68,30 @@ class InstallationDirector :
         if self.is_encounter_running:
             return
         self.is_encounter_running = True
+
         self.current_visitor =  self.create_visitor()
 
         self.obelisk_director.observe(self.current_visitor) #captures frame and runs pipeline
+       
+        #intepret and store in visitor dict
+        intepret_everything(self.current_visitor)
+
+        self._evaluate_visitor_profile(self.current_visitor) #decide + score value type
+
+        self.obelisk_director.select_elements(self.current_visitor)
         
-        self._evaluate_visitor_profile(self.current_visitor)
-        
+    
+
         self._route_output(self.current_visitor)
+
         print('Route Output Done')
         #add visitor to history to measure length
         self._add_to_visitor_history(self.current_visitor)
+
         print('History Added')
         #log endtime
         self.current_visitor["end_time"] = datetime.now()
+
         #reset and prepare for next visitor
         self._reset()
         print('Reset Done')
@@ -87,20 +99,20 @@ class InstallationDirector :
 
     def _evaluate_visitor_profile(self, visitor):
         #brain + determines if its selphy , or thermal
-        self.current_visitor_score = decide_score(visitor)
-        print("Score: ", self.current_visitor_score)
+        decide(visitor)
+        print("Score:", visitor["satisfaction_score"])
+        print("Rarity:", visitor["rarity_tier"])
+        print("Output:", visitor["output_type"])
     
     def _add_to_visitor_history(self,visitor):
         self.encounter_history.append(visitor)
 
     def _route_output(self , visitor):
-        #decide which to print
-        # if self.current_visitor_score["printer_output_type"] == "selphy":
-        #     print("Printing Selphy Card")
-        self.obelisk_director.produce_selphy_card(visitor)
-        # elif self.current_visitor_score["printer_output_type"] == "thermal":
+        if visitor["output_type"] == "selphy":
+            self.obelisk_director.produce_selphy_card(visitor)
+        elif visitor["output_type"] == "thermal":
+            self.obelisk_director.produce_selphy_card(visitor)
 
-        #self.minilisk_director.produce_thermal_slip(visitor, self.current_visitor_score)
 
     def _reset(self):
         self.current_visitor = None

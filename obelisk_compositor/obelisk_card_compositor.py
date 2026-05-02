@@ -1,7 +1,7 @@
 
 from PIL import Image, ImageDraw
-from compositor.obelisk_card_constants import CARD_WIDTH , CARD_HEIGHT , CARD_BG_COLOR 
-from compositor.obelisk_card_constants import ELEMENT_POSITIONS , Z_ORDER
+from obelisk_compositor.obelisk_card_constants import CARD_WIDTH , CARD_HEIGHT , CARD_BG_COLOR 
+from obelisk_compositor.obelisk_card_constants import ELEMENT_POSITIONS , Z_ORDER
 from core.placeholder_shapes import draw_shapes
 
 

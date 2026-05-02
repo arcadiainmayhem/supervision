@@ -1,5 +1,5 @@
 
-from core.installation_constants import *
+from computervision.core.classifier_constants import *
 
 def classify(extracted):
 

@@ -16,7 +16,7 @@ def compose_slip(assembled_data):
     for key in SLIP_LAYOUT:
         position = SLIP_LAYOUT[key]
         value = assembled_data.get(key , "missing") #fallback is missing
-        print(f"{key} : {position}")
+        #print(f"{key} : {position}")
         draw_placeholder(draw , position , f"{key}: {value}")
 
     # canvas.show()

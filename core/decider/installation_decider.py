@@ -1,63 +1,27 @@
+from core.scorecard_constants import *
 
 
-SELPHY_THRESHOLD = 0.8
+def decide(visitor):
 
+    final_score = (
+        visitor["presence_score"] * AXIS_WEIGHT_PRESENCE +
+        visitor["expression_score"] * AXIS_WEIGHT_EXPRESSION +
+        visitor["context_score"] * AXIS_WEIGHT_CONTEXT +
+        visitor["time_score"] * AXIS_WEIGHT_TIME
+    )
 
+    visitor["satisfaction_score"] = final_score
 
-def decide_score(visitor):
-
-    visitor_score = 0
-
-
-    #score deciders
-    if visitor["face_detected"]: visitor_score += 0.3
-    if visitor["body_detected"]: visitor_score += 0.1
-    if visitor["hand_detected"]: visitor_score += 0.2
-
-    #Specific pose detection
-
-    #specific hand gesture detection
-
-    #hue category
-    if visitor["hue_category"] == "warm":
-        visitor_score += 0.12
-    elif visitor["hue_category"] == "cool":
-        visitor_score += 0.13
-    elif visitor["hue_category"] == "neutral":
-        visitor_score += 0.09
-    #brightness category
-    if visitor["brightness"] == "dark":
-        visitor_score += 0.12
-    elif visitor["brightness"] == "light":
-        visitor_score += 0.13
-
-    #Dwell Time
-
-    #Energy 
-
-    visitor["satisfaction_score"] = visitor_score
-
-    #decide output
-    output_type = _score_to_print_output(visitor_score)
-
-    return {
-        "printer_output_type" : output_type,
-        "satisfaction_score" : visitor_score,
-    }
-
-
-def _score_presence(visitor): # face, body, hands
-    pass
-def _score_colour(visitor):   # hue, brightness  
-    pass
-def _score_behaviour(visitor): # dwell time, energy
-    pass
-def _score_context():          # moon, date
-    pass
-
-def _score_to_print_output(score):
-    
-    if score >= SELPHY_THRESHOLD:
-        return "selphy"
+    #rarity_tier - filters to 3 types of rarity
+    if final_score >= RARITY_RARE_MIN:
+        visitor["rarity_tier"] = "rare"
+    elif final_score >= RARITY_UNCOMMON_MIN:
+        visitor["rarity_tier"] = "uncommon"
     else:
-        return "thermal"
+        visitor["rarity_tier"] = "common"
+
+    # output type
+    if final_score >= OUTPUT_SELPHY_THRESHOLD:
+        visitor["output_type"] = "selphy"
+    else:
+        visitor["output_type"] = "thermal"

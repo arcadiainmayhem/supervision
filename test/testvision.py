@@ -6,8 +6,8 @@ from computervision.imageloader import load_image, get_region
 from core.installation_constants import *
 from computervision.extractor import extract_color
 from computervision.classifier import classify
-from compositor.selector import select
-from compositor.compose import composite_elements
+from obelisk_compositor.obelisk_card_selector import select
+from obelisk_compositor.obelisk_card_compositor import composite_elements
 from computervision.mediapipe.orchestrator import orchestrate_pipeline
 from computervision.extract_coordinates import extract_coordinates
 

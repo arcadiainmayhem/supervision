@@ -4,15 +4,13 @@ from datetime import datetime
 
 
 def get_element(datestamp):
-    sign = get_sun_sign(datestamp)
+    sign = get_sun_sign_from_current_date(datestamp)
     return _sign_to_elements(sign)
 
 
-def get_sun_sign(datestamp):
+def get_sun_sign_from_current_date(datestamp):
     month = datestamp.month
     day = datestamp.day
-
-
 
 
     if (month == 3 and day >= 21) or (month == 4 and day <= 19):
@@ -57,4 +55,5 @@ def _sign_to_elements(sign):
     if sign in AIR: return "air"
     if sign in EARTH: return "earth"
 
-    return "unknown"
+    else :
+        return "unknown"

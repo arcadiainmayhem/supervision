@@ -19,9 +19,9 @@ class MiniliskDirector():
 
         
 
-    def produce_thermal_slip(self, visitor, decider_data):
+    def produce_thermal_slip(self, visitor):
         print("Assembling thermal..")
-        assembled = assemble(visitor , decider_data)
+        assembled = assemble(visitor)
         print("Composing thermal..")
         output = compose_slip(assembled)
         print("Showing thermal..")

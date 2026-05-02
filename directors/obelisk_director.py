@@ -18,8 +18,8 @@ from computervision.mediapipe.detection.gesture_recognizer import setup_gesture_
 from computervision.mediapipe.mediapipe_interpreter import interpret_all_mediapipe_detection
 
 from hardware.camera.camera_manager import CameraManager
-from compositor.selector import select
-from compositor.compose import composite_elements
+from obelisk_compositor.obelisk_card_selector import select
+from obelisk_compositor.obelisk_card_compositor import composite_elements
 
 #Observe
 
@@ -108,11 +108,15 @@ class ObeliskDirector():
         visitor["camera_frame"] = frame
 
         print("Detecting Body, Face , Hands...")
+
         #parsed from mediapipe
         detected_results = orchestrate_detection_pipeline(frame , self.body_detector, self.face_detector , self.hand_detector , self.gesture_recognizer )
         intepreted_results = interpret_all_mediapipe_detection(detected_results)
 
         region_crop = extract_coordinates(detected_results , frame) # for specific region crop
+        hsv_crop = cv2.cvtColor(region_crop , cv2.COLOR_BGR2HSV)
+
+
 
         #writing to visitor state dict
         visitor["face_detected"] = intepreted_results["face_detected"]
@@ -135,7 +139,8 @@ class ObeliskDirector():
 
         #extracting color values in crop
         print("Extracting Colors..")
-        color_results = extract_color(region_crop)
+        color_results = extract_color(hsv_crop)
+        
         visitor["color_saturation"] = color_results["average_saturation"]
         visitor["color_value"] = color_results["average_value"]
         visitor["color_hue"] = color_results["dominant_hue"]
@@ -147,17 +152,18 @@ class ObeliskDirector():
         visitor["hue_category"] = categorised["hue_category"]
         visitor["brightness"] = categorised["brightness"]
 
-
-
-        print("Selecting Elements...")
-        #selected elements / pngs
-        selection = select(categorised)
-        visitor["selected_elements"] = selection
+        # #selected elements / pngs
+        # selection = select(categorised)
+        # visitor["selected_elements"] = selection
         
         #later for memory?
 
     def _return_visitor( self , visitor):
         return visitor
+
+    def select_elements(self,visitor):
+        select(visitor)
+        print("Selected Elements:" , visitor["selected_elements"] )
 
     def produce_selphy_card(self,visitor):
         elements = visitor["selected_elements"]
