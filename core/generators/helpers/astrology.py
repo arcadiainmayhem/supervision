@@ -1,7 +1,7 @@
 
 from datetime import datetime
 
-
+#TODO DEPTH AND LINKING FOR THERMAL SLIP
 
 def get_element(datestamp):
     sign = get_sun_sign_from_current_date(datestamp)
@@ -47,7 +47,6 @@ def _sign_to_elements(sign):
     WATER = ["pisces","scorpio","cancer"]
     AIR = ["gemini" , "libra" , "aquarius"]
     EARTH =["virgo","taurus","capricorn"] 
-
 
 
     if sign in FIRE: return "fire"

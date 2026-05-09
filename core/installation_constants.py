@@ -6,6 +6,20 @@ import os
 DEV_MODE = platform.system() != "Linux" 
 #DEV_MODE = True
 
+#OUTPUT DIRECTORY
+OUTPUTS_DIR = "outputs"
+SELPHY_OUTPUTS_DIR = "outputs/selphy"
+THERMAL_OUTPUTS_DIR = "outputs/thermal"
+
+#FALLBACK DIRECTORY
+FALLBACK_IMAGE_PATH = "test/fallback/fallback_3.png"
+
+#INSTALLATION NAMES
+SELPHY_PRINTER_NAME = "Canon_SELPHY_CP1500"
+THERMAL_VENDOR_ID = None
+THERMAL_PRODUCT_ID = None
+
+#REGIONS
 TOP_REGION_END = 1/3 #top third
 
 MIDDLE_REGION_START = 1/3 

@@ -1,12 +1,8 @@
-
-
-
-SYMBOLS = { 
-    "warm" : "seal_fire.png",
-    "cool" : "seal_water.png",
-    "neutral" : "seal_earth.png",
-}
+import random
+from minilisk.thermal_slip_codex import *
 
 
 def pick(visitor_data):
-    return SYMBOLS.get(visitor_data["hue_category"] , "seal_default.png" )
+    element = visitor_data.get("element" , "earth")
+    pool = EMBLEM_SEAL_POOL.get(element , EMBLEM_SEAL_POOL["earth"])
+    return random.choice(pool)

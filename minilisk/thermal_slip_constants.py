@@ -2,22 +2,24 @@
 
 #FINAL PRINTOUT
 THERMAL_SLIP_WIDTH = 640
-THERMAL_SLIP_HEIGHT = 800
 THERMAL_SLIP_BG_COLOR = 'white'
 
 THERMAL_SLIP_BORDER = 25
 THERMAL_SLIP_SPACING_BETWEEN_ELEMENTS = 35
+THERMAL_LINE_HEIGHT  = 50
+
+LINE_HEIGHT = 50
 
 SLIP_LAYOUT = {
-    "title":          (THERMAL_SLIP_WIDTH // 2, 40),   # centred
-    "subtitle":       (THERMAL_SLIP_WIDTH // 2, 80),   # centred
-    "emblem_seal":    (THERMAL_SLIP_WIDTH // 2, 280),  # centred, large
-    "reading_1":      (THERMAL_SLIP_BORDER, 480),
-    "reading_2":      (THERMAL_SLIP_BORDER, 520),
-    "reading_3":      (THERMAL_SLIP_BORDER, 560),
-    "lucky_number":   (THERMAL_SLIP_BORDER, 630),
-    "moon_phase":     (THERMAL_SLIP_WIDTH // 2, 630),
-    "element":        (THERMAL_SLIP_WIDTH - 150, 630),
-    "Footer_1":       (THERMAL_SLIP_BORDER, 720),
-    "Footer_2":       (THERMAL_SLIP_WIDTH // 2, 720),
+    "title":          (0, THERMAL_SLIP_BORDER),
+    "subtitle":       (THERMAL_SLIP_WIDTH // 3 + 50, LINE_HEIGHT * 3),
+    "emblem_seal":    (THERMAL_SLIP_WIDTH // 3 - THERMAL_SLIP_BORDER, LINE_HEIGHT * 3),
+    "reading_1":      (THERMAL_SLIP_BORDER * 3, LINE_HEIGHT * 9),
+    "reading_2":      (THERMAL_SLIP_BORDER * 3 - THERMAL_SLIP_BORDER, LINE_HEIGHT * 10),
+    "lucky_number":   (THERMAL_SLIP_BORDER * 3 - THERMAL_SLIP_BORDER, LINE_HEIGHT * 12),
+    "moon_phase":     (THERMAL_SLIP_WIDTH // 2 + THERMAL_SLIP_BORDER, LINE_HEIGHT * 12),
+    "element":        (THERMAL_SLIP_WIDTH // 3, LINE_HEIGHT * 13),
+    "visitor_number": (THERMAL_SLIP_BORDER, LINE_HEIGHT * 15),
 }
+
+THERMAL_SLIP_HEIGHT = 2000

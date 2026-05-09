@@ -5,8 +5,11 @@ from core.decider.installation_decider import decide
 from computervision.interpreter.interpretation_director import intepret_everything
 from hardware.button.button_listener import register_trigger_button
 from datetime import datetime
+from core.save_manager import save
 import os 
 import signal
+import traceback
+
 #main coordinator 
 
 class InstallationDirector :
@@ -23,7 +26,8 @@ class InstallationDirector :
         self.isButtonListening = False
 
         #printer related
-        
+        self.is_printing = False
+
         #visitor related
         self.current_visitor = None
         self.current_visitor_score = None
@@ -65,37 +69,49 @@ class InstallationDirector :
         print("Button Pressed - Encounter Triggered")
         #check button press / trigger -> gets observation visitor dict from obelisk
         #create visitor + guard against running twice
-        if self.is_encounter_running:
+        if self.is_encounter_running or self.is_printing:
+            print("Busy - Trigger Ignored")
             return
+        
         self.is_encounter_running = True
 
-        self.current_visitor =  self.create_visitor()
+        try:
+            self.current_visitor =  self.create_visitor()
 
-        self.obelisk_director.observe(self.current_visitor) #captures frame and runs pipeline
-       
-        #intepret and store in visitor dict
-        intepret_everything(self.current_visitor)
-
-        self._evaluate_visitor_profile(self.current_visitor) #decide + score value type
-
-        self.obelisk_director.select_elements(self.current_visitor)
+            self.obelisk_director.observe(self.current_visitor) #captures frame and runs pipeline
         
-    
+            #intepret and store in visitor dict
+            intepret_everything(self.current_visitor)
 
-        self._route_output(self.current_visitor)
+            self._evaluate_visitor_profile(self.current_visitor) #decide + score value type
+            #select elements for selphy
+            self.obelisk_director.select_elements(self.current_visitor)
+            #select readings for thermal
+            self.minilisk_director.assemble_slip(self.current_visitor)
+        
 
-        print('Route Output Done')
-        #add visitor to history to measure length
-        self._add_to_visitor_history(self.current_visitor)
+            self._route_output(self.current_visitor)
 
-        print('History Added')
-        #log endtime
-        self.current_visitor["end_time"] = datetime.now()
+            print('Route Output Done')
+            #add visitor to history to measure length
+            self._add_to_visitor_history(self.current_visitor)
 
-        #reset and prepare for next visitor
-        self._reset()
-        print('Reset Done')
-       
+            print('History Added')
+            #log endtime
+            self.current_visitor["end_time"] = datetime.now()
+
+            #reset and prepare for next visitor
+            self._reset()
+            print('Reset Done')
+
+        except Exception as e:
+            print(f"Encounter Failed: {e}")
+            #prints full error with exact file
+            traceback.print_exc()
+        finally:
+            #resets flags so it can be triggered again
+            self.is_encounter_running = False
+            self.is_printing = False
 
     def _evaluate_visitor_profile(self, visitor):
         #brain + determines if its selphy , or thermal
@@ -108,10 +124,24 @@ class InstallationDirector :
         self.encounter_history.append(visitor)
 
     def _route_output(self , visitor):
+
         if visitor["output_type"] == "selphy":
-            self.obelisk_director.produce_selphy_card(visitor)
+            self.is_printing = True
+            image = self.obelisk_director.composite_selphy_card(visitor)
+            #save to visitor dict 
+            visitor["output_path"] = save(image, visitor , "selphy")
+            #print after saving from path
+            self.obelisk_director.prepare_selphy_card_print(visitor)
+            self.is_printing = False
+
         elif visitor["output_type"] == "thermal":
-            self.obelisk_director.produce_selphy_card(visitor)
+            self.is_printing = True
+            image = self.minilisk_director.composite_thermal_slip(visitor)
+            #save to visitor dict 
+            visitor["output_path"] = save(image, visitor , "thermal")
+            #print after saving from path
+            self.minilisk_director.prepare_thermal_slip_print(visitor)
+            self.is_printing = False
 
 
     def _reset(self):

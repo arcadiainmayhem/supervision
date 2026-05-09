@@ -2,6 +2,8 @@ import time
 from hardware.button.button_listener import register_trigger_button
 import cv2
 import threading
+import subprocess
+from PIL import Image
 from hardware.camera.camera_constants import *
 from core.installation_constants import *
 from computervision.extractor import extract_color
@@ -40,7 +42,7 @@ class ObeliskDirector():
         #obelisk variables
         self.isWatching = False
     
-        
+        #printing state flag     
         self.isPrinting = False
 
         #theadings
@@ -68,13 +70,19 @@ class ObeliskDirector():
 
 
     def _capture(self):
-        if DEV_MODE:
-            return load_image(DEV_IMAGE_PATH)
-        else:
-            print("Dev Mode", DEV_MODE)
-            print("Camera Object", self.camera.cam)
-            with self.frame_lock:
-             return self.camera.capture()
+        try:
+            if DEV_MODE:
+                return load_image(DEV_IMAGE_PATH)
+            else:
+                print("Dev Mode", DEV_MODE)
+                print("Camera Object", self.camera.cam)
+                with self.frame_lock:
+                    return self.camera.capture()
+            
+        except Exception as e:
+            print(f"Camera capture failed: {e} — loading fallback image")
+            return load_image(FALLBACK_IMAGE_PATH)
+
         
     def read_frame(self):
         #read frames for passive sampling
@@ -165,20 +173,31 @@ class ObeliskDirector():
         select(visitor)
         print("Selected Elements:" , visitor["selected_elements"] )
 
-    def produce_selphy_card(self,visitor):
+    def composite_selphy_card(self,visitor):
         elements = visitor["selected_elements"]
         output_image = composite_elements(elements)
-        output_image.save("test/output.png")
-        if DEV_MODE:
-            output_image.show()
-        else:
-            self._print_selphy_card(output_image)
 
         return output_image
+    
+    def prepare_selphy_card_print(self,visitor):
+        #output_image.save("test/output.png")
+        if DEV_MODE:
+            img = Image.open(visitor["output_path"])
+            img.show()
+        else:
+            self._print_selphy_card(visitor)
 
-    def _print_selphy_card(self, output_image ):
+
+    def _print_selphy_card(self, visitor):
+        
         #send output image to Selphy via CUPS
-        print("Connecting to Printer - Print Selphy Card")#
+        try:
+            filepath = visitor["output_path"]
+            #output_image.save(filepath)
+            subprocess.run(["lp" , "-d", SELPHY_PRINTER_NAME , filepath] , check=True)
+            print("Selphy Print Sent Successful")
+        except Exception as e:
+            print("Connecting to Printer - Print Selphy Card")#
 
     def _stop_camera(self):
         self.stop_watching() #stop thread before stopping camera

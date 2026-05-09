@@ -49,8 +49,9 @@ def create_visitor_state(visitor_number):
 
     #For Final Output
     "output_type" : None,
+    "output_path" : None,
     "selected_elements" : None,
-    
+    "assembled_slip" : None,
     
     #--PRESENCE AXIS
     "presence_score" : None,
