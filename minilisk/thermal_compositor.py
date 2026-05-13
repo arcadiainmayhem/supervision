@@ -5,7 +5,7 @@ import textwrap
 
 ASSETS_DIR = "test/Thermal_Trial_0905"
 
-FONT_PATH = "C:/Windows/Fonts/cour.ttf"
+FONT_PATH = f"{ASSETS_DIR}/Fonts/Merchant_Copy.ttf"
 FONT_LARGE = ImageFont.truetype(FONT_PATH, 72)
 FONT_MEDIUM = ImageFont.truetype(FONT_PATH, 62)
 FONT_SMALL = ImageFont.truetype(FONT_PATH, 40)
