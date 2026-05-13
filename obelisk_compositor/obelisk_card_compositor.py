@@ -6,7 +6,7 @@ from obelisk_compositor.obelisk_card_constants import ELEMENT_POSITIONS_IAF , Z_
 from core.placeholder_shapes import draw_shapes
 
 
-ASSETS_DIR = "test/Selphy_Trial_0505"
+ASSETS_DIR = "test/Selphy_Trial_1105"
 
 
 def composite_elements(selected):

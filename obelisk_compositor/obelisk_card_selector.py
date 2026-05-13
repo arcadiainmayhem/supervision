@@ -26,10 +26,14 @@ def select(visitor):
     rarity = visitor["rarity_tier"]
 
     visitor["selected_elements"] = {
+        "background" : weighted_pick(BACKGROUND_POOL[rarity]),
+        "title" : weighted_pick(TITLE_POOL[rarity]),
+        "border" : weighted_pick(BORDER_POOL[rarity]),
         "face":       weighted_pick(FACE_POOL[rarity]),
         "eyes":       weighted_pick(EYE_POOL[rarity]),
         "nose":       weighted_pick(NOSE_POOL[rarity]),
         "mouth":      weighted_pick(MOUTH_POOL[rarity]), 
+        "logo" : weighted_pick(LOGO_POOL[rarity]),
     }
 
 
