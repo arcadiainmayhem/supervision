@@ -13,9 +13,9 @@ def assemble(visitor):
         "emblem_seal": pick_symbol(visitor),
         "reading_1": pick_readings(visitor),
         "reading_2": pick_readings(visitor),
-        "lucky_number": f"Lucky Number: {visitor["numerology"]}",
-        "moon_phase": f"Moon: { visitor["moon_phase"]}",
-        "element": f"Element Affinity: {visitor["element"]}",
+        "lucky_number": f"Lucky Number: {visitor['numerology']}",
+        "moon_phase": f"Moon: { visitor['moon_phase']}",
+        "element": f"Element Affinity: {visitor['element']}",
         "Footer_1": visitor["visitor_number"],
 
     }
