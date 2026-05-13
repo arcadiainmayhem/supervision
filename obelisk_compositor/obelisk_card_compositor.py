@@ -12,7 +12,7 @@ ASSETS_DIR = "test/Selphy_Trial_1105"
 def composite_elements(selected):
     
     #create new canvas
-    canvas = Image.new("RGB",[CARD_WIDTH , CARD_HEIGHT] , CARD_BG_COLOR)
+    canvas = Image.new("RGBA",[CARD_WIDTH , CARD_HEIGHT] , CARD_BG_COLOR)
     #draw on created canvas
     draw = ImageDraw.Draw(canvas)
 
