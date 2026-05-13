@@ -37,4 +37,4 @@ def composite_elements(selected):
         except Exception as e:
             print (f"Layer {layer} failed : {e} - skipping")
             
-    return canvas
+    return canvas.convert("RGB")

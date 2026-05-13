@@ -197,7 +197,7 @@ class ObeliskDirector():
             subprocess.run(["lp" , "-d", SELPHY_PRINTER_NAME , filepath] , check=True)
             print("Selphy Print Sent Successful")
         except Exception as e:
-            print("Connecting to Printer - Print Selphy Card")#
+            print(f"Selphy print failed: {e}")
 
     def _stop_camera(self):
         self.stop_watching() #stop thread before stopping camera
