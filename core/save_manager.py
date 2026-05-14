@@ -18,7 +18,7 @@ def save(image , visitor ,output_type):
     filepath = os.path.join(output_dir,filename)
     print(f"SaveManager : Image Saved to {filepath}")
 
-    image.save(filepath)
+    image.save(filepath , dpi=(300,300))
     return filepath
 
 
