@@ -199,7 +199,7 @@ class ObeliskDirector():
             subprocess.run(["lp" , "-d", SELPHY_PRINTER_NAME , filepath] , check=True)
             print("Selphy Print Sent Successful")
             #clear completed job
-            subprocess.run(["cancel", "-a", SELPHY_PRINTER_NAME], check=False)
+            #subprocess.run(["cancel", "-a", SELPHY_PRINTER_NAME], check=False)
         except Exception as e:
             print(f"Selphy print failed: {e}")
 
