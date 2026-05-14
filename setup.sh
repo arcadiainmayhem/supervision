@@ -24,11 +24,10 @@ pip install -r requirements_pi.txt
 wget -q https://gist.githubusercontent.com/benjaminkott/e293147dd0ea9e6fa7f1194567a5d1ba/raw/00975a9a713e24417a476f923d8e2b4c2a6529b4/Canon_SELPHY_CP1500.ppd
 
 # Add Selphy printer with correct driver
-sudo lpadmin -p SelphyCP1500 -E \
-  -v "usb://Canon/SELPHY%20CP1500?serial=CV25071808075718" \
-  -P Canon_SELPHY_CP1500.ppd \
-  -o StpiShrinkOutput=Expand \
-  -o StpBorderless=True
+sudo lpadmin -p Selphy -E -v usb://Canon/SELPHY%20CP1500?serial=CV25071808075718 -m gutenprint.5.3://canon-cp1300/expert
+sudo lpadmin -d Selphy
+sudo lpadmin -p Selphy -o StpiShrinkOutput=Shrink
+sudo lpadmin -p Selphy -o PageSize=Postcard
 
 echo "Downloading MediaPipe models..."
 cd computervision/mediapipe/detection/ 
