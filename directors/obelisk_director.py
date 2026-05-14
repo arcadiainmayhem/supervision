@@ -196,10 +196,24 @@ class ObeliskDirector():
         try:
             filepath = visitor["output_path"]
             #output_image.save(filepath)
-            subprocess.run(["lp" , "-d", SELPHY_PRINTER_NAME , filepath] , check=True)
+            result = subprocess.run(["lp" , "-d", 
+                                     SELPHY_PRINTER_NAME , filepath] , 
+                                     check=True , capture_output=True , 
+                                     test = True)
             print("Selphy Print Sent Successful")
             #clear completed job
             #subprocess.run(["cancel", "-a", SELPHY_PRINTER_NAME], check=False)
+            #extract Job ID from lp ouput 
+            job_id = result.stdout.strip().split()[-3]
+
+
+            while True:
+                check = subprocess.run(["lpstat","-o"], capture_output=True , text=True)
+                if job_id not in check.stdout:
+                    break
+                time.sleep(5)
+
+            print("Selphy Print Job Completed")    
         except Exception as e:
             print(f"Selphy print failed: {e}")
 
