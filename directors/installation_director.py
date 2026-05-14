@@ -75,7 +75,7 @@ class InstallationDirector :
         
         #setting flags to true
         self.is_encounter_running = True
-
+        self.is_printing = True
         try:
             self.current_visitor =  self.create_visitor()
 
