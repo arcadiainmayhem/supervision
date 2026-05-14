@@ -93,6 +93,7 @@ class ObeliskDirector():
             #TODO: TREADING
                 with self.frame_lock: #acquire lock
                     frame = self.camera.preview_frame()
+                time.sleep(0.03)
                 if frame is not None:
                     print("Camera is Observing")
                     if DEV_MODE:
