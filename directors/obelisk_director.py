@@ -95,8 +95,9 @@ class ObeliskDirector():
                     frame = self.camera.preview_frame()
                 if frame is not None:
                     print("Camera is Observing")
-                    cv2.imshow("Camera Preview", frame)
-                    cv2.waitKey(1)
+                    if DEV_MODE:
+                        cv2.imshow("Camera Preview", frame)
+                        cv2.waitKey(1)
                 #timing issue
                 time.sleep(0.03)
 
