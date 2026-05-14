@@ -212,7 +212,8 @@ class ObeliskDirector():
                 if job_id not in check.stdout:
                     break
                 time.sleep(5)
-
+            print("Printing in Progress - Wait....")
+            time.sleep(90)
             print("Selphy Print Job Completed")    
         except Exception as e:
             print(f"Selphy print failed: {e}")
