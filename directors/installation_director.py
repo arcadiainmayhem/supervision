@@ -73,14 +73,10 @@ class InstallationDirector :
             print("Busy - Trigger Ignored")
             return
         
+        #setting flags to true
         self.is_encounter_running = True
 
         self.is_printing = True 
-
-
-        if self.is_printing:
-            print("Printing - Trigger Ignored")
-            return
 
         try:
             self.current_visitor =  self.create_visitor()
