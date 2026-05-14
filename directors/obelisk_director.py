@@ -95,7 +95,7 @@ class ObeliskDirector():
                     frame = self.camera.preview_frame()
                 time.sleep(0.03)
                 if frame is not None:
-                    print("Camera is Observing")
+                    #print("Camera is Observing")
                     if DEV_MODE:
                         cv2.imshow("Camera Preview", frame)
                         cv2.waitKey(1)
@@ -198,6 +198,8 @@ class ObeliskDirector():
             #output_image.save(filepath)
             subprocess.run(["lp" , "-d", SELPHY_PRINTER_NAME , filepath] , check=True)
             print("Selphy Print Sent Successful")
+            #clear completed job
+            subprocess.run(["cancel", "-a", SELPHY_PRINTER_NAME], check=False)
         except Exception as e:
             print(f"Selphy print failed: {e}")
 
