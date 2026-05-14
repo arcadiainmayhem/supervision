@@ -199,7 +199,7 @@ class ObeliskDirector():
             result = subprocess.run(["lp" , "-d", 
                                      SELPHY_PRINTER_NAME , filepath] , 
                                      check=True , capture_output=True , 
-                                     test = True)
+                                     text = True)
             print("Selphy Print Sent Successful")
             #clear completed job
             #subprocess.run(["cancel", "-a", SELPHY_PRINTER_NAME], check=False)
