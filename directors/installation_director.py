@@ -75,6 +75,13 @@ class InstallationDirector :
         
         self.is_encounter_running = True
 
+        self.is_printing = True 
+
+
+        if self.is_printing:
+            print("Printing - Trigger Ignored")
+            return
+
         try:
             self.current_visitor =  self.create_visitor()
 
@@ -126,7 +133,6 @@ class InstallationDirector :
     def _route_output(self , visitor):
 
         if visitor["output_type"] == "selphy":
-            self.is_printing = True
             image = self.obelisk_director.composite_selphy_card(visitor)
             #save to visitor dict 
             visitor["output_path"] = save(image, visitor , "selphy")
@@ -142,7 +148,6 @@ class InstallationDirector :
             # #print after saving from path
             # self.minilisk_director.prepare_thermal_slip_print(visitor)
             # self.is_printing = False
-            self.is_printing = True
             image = self.obelisk_director.composite_selphy_card(visitor)
             #save to visitor dict 
             visitor["output_path"] = save(image, visitor , "selphy")
