@@ -41,14 +41,7 @@ class MiniliskDirector():
 
     def _print_thermal_slip(self, visitor):
         #send to THERMAL PRINTER via python escpos
-        # try:
-        #     filepath = visitor["output_path"]
-        #     img = Image.open(filepath)
-        #     self.printer.image(img)
-        #     self.printer.cut()
-        #     print("Thermal : Print Sent Successfully")
-        # except Exception as e:
-        #     print(f"Thermal: Print Failed {e}")
+
         assembled_data = visitor["assembled_slip"]
 
         print_thermal_slip_escpos(assembled_data,self.printer)
