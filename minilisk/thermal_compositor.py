@@ -112,7 +112,7 @@ def print_thermal_slip_escpos(assembled, printer):
 
     seal = assembled.get("emblem_seal")
     if seal:
-        img = Image.open(f"{ASSETS_DIR}/emblem_seal/{seal}").convert("1")
+        img = Image.open(f"{ASSETS_DIR}/emblem_seal/{seal}").convert("RGBA")
         img = _flatten_for_thermal(img)
         img = _center_image(img)
         printer.image(img)
