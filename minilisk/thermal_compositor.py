@@ -106,7 +106,7 @@ def print_thermal_slip_escpos(assembled, printer):
     title = assembled.get("title")
     if title:
         img = Image.open(f"{ASSETS_DIR}/title/{title}").convert("RGBA")
-        background = Image.new("RGBA",img.size(255,255,255,255))
+        background = Image.new("RGBA",img.size,(255,255,255,255))
         background.paste(img , mask=img.split()[3])
         img = background.convert("1")
         printer.image(img)
