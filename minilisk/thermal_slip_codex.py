@@ -3,7 +3,7 @@
 
 
 
-TITLE_POOL = [ 'title_1.png' , "title_2.png" , "title_3.png" , "title_4.png", "title_5"]
+TITLE_POOL = [ 'title_1.png' , "title_2.png" , "title_3.png" , "title_4.png", "title_5.png"]
 
 
 
