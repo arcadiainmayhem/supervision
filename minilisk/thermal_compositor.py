@@ -132,8 +132,8 @@ def print_thermal_slip_escpos(assembled, printer):
 
 
 def _flatten_for_thermal(img):
-    background = Image.new("RGBA" , img.size, ( 255 , 255 ,255 ,255))
-    background.paste(img , mask=img.split()[3])
+    background = Image.new("RGBA", img.size, (255, 255, 255, 255))
+    background.paste(img, mask=img.split()[3])
     return background.convert("1")
 
 
