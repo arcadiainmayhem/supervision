@@ -69,7 +69,8 @@ class InstallationDirector :
         #channel might be a GPIO pin number , a keyboard event or None
         #we dont use it, but accept it gracefully
         print("Button Pressed - Encounter Triggered")
-
+        print(f"_run_encounter called at {time.time()}")
+        
         now = time.time()
 
         if now - self.last_trigger_time < TRIGGER_DEBOUNCE_SECONDS:
@@ -124,6 +125,10 @@ class InstallationDirector :
             traceback.print_exc()
         finally:
             #resets flags so it can be triggered again
+            self.last_trigger_time = time.time()
+            print("Last Trigger Time: ", self.last_trigger_time)
+
+
             self.is_encounter_running = False
             self.is_printing = False
             #clears buffer + registers
