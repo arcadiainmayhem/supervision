@@ -99,31 +99,25 @@ def print_thermal_slip_escpos(assembled_data , printer):
     print.cut ()
 
 
-def _draw_wrapped_text(draw , text , x , y , font , max_width):
-    #wrap at 35 characters
-    lines = textwrap.wrap(text , width = 20)
-    for line in lines:
-        draw.text((x,y),line , font = font , fill = "black")
-        y += font.size + LINE_SPACING
-    return y
-
-
 
 
 def print_thermal_slip_escpos(assembled, printer):
     #images
     title = assembled.get("title")
     if title:
-        img = Image.open(f"{ASSETS_DIR}/title/{title}").convert("1")
+        img = Image.open(f"{ASSETS_DIR}/title/{title}").convert("RGBA")
+        background = Image.new("RGBA",img.size(255,255,255,255))
+        background.paste(img , mask=img.split()[3])
+        img = background.convert("1")
         printer.image(img)
 
     seal = assembled.get("emblem_seal")
     if seal:
         img = Image.open(f"{ASSETS_DIR}/emblem_seal/{seal}").convert("1")
-        printer.image(img)
+        printer.image(_center_image(img))
 
     # native text
-    printer.set(align='center', font='a', height=5, width=2 )
+    printer.set(align='center', font='a', height=2, width=2 , underline = 1)
     printer.text(f"{assembled.get('reading_1', '')}\n")
     printer.text(f"{assembled.get('reading_2', '')}\n")
     
@@ -134,3 +128,22 @@ def print_thermal_slip_escpos(assembled, printer):
     printer.text(f"{assembled.get('visitor_number', '')}\n")
     
     printer.cut()
+
+
+
+
+def _draw_wrapped_text(draw , text , x , y , font , max_width):
+    #wrap at 35 characters
+    lines = textwrap.wrap(text , width = 20)
+    for line in lines:
+        draw.text((x,y),line , font = font , fill = "black")
+        y += font.size + LINE_SPACING
+    return y
+
+
+
+def _center_image(img, width = 640):
+    centered_image = Image.new("1" , (width , img.height) , 1) #white canvas
+    x = (width - img.width) // 2
+    centered_image.paste(img , (x , 0))
+    return centered_image
