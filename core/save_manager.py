@@ -15,6 +15,8 @@ def save(image , visitor ,output_type):
 
     output_dir = SELPHY_OUTPUTS_DIR if output_type == "selphy" else THERMAL_OUTPUTS_DIR
 
+    os.makedirs(output_dir , exist_ok= True) #create if it doesnt exist
+
     filepath = os.path.join(output_dir,filename)
     print(f"SaveManager : Image Saved to {filepath}")
 
