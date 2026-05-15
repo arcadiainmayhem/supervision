@@ -132,6 +132,7 @@ def print_thermal_slip_escpos(assembled, printer):
     printer.text("\n")
 
     printer.set_with_default(align='center')
+    
     printer.text(f"{assembled.get('lucky_number', '')}\n")
     printer.text(f"{assembled.get('moon_phase', '')}\n")
     printer.text(f"{assembled.get('element', '')}\n")
@@ -170,5 +171,5 @@ def _center_image(img, width = 640):
 
 
 def _print_divider(printer):
-    print.set_with_default(align='center')
+    printer.set_with_default(align='center')
     printer.text(" = = = = = = = = = = = = = = = \n ")
