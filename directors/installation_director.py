@@ -127,8 +127,8 @@ class InstallationDirector :
             self.is_encounter_running = False
             self.is_printing = False
             #clears buffer + registers
-            print("Button Buffer Cleared - Registering Again")
-            register_trigger_button(self._run_encounter)
+            print("Button Buffer Cleared")
+            #register_trigger_button(self._run_encounter)
 
     def _evaluate_visitor_profile(self, visitor):
         #brain + determines if its selphy , or thermal

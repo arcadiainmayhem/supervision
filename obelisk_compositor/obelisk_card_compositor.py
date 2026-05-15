@@ -28,7 +28,7 @@ def composite_elements(selected):
         try:
             img = Image.open(path).convert("RGBA")
             
-            print(img.getbbox())
+            #print(img.getbbox())
 
             canvas.paste(img, position ,img)
 
