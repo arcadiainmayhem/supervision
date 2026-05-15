@@ -162,7 +162,7 @@ def _draw_wrapped_text(draw , text , x , y , font , max_width):
 
 
 
-def _center_image(img, width = 640):
+def _center_image(img, width = 576):
     centered_image = Image.new("1" , (width , img.height) , 1) #white canvas
     x = (width - img.width) // 2
     centered_image.paste(img , (x , 0))
