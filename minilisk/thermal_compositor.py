@@ -123,11 +123,11 @@ def print_thermal_slip_escpos(assembled, printer):
         printer.image(img)
 
     # native text
-    printer.set(align='left', font='a', height=2, width=2)
+    printer.set(align='center', font='a', height=5, width=2 )
     printer.text(f"{assembled.get('reading_1', '')}\n")
     printer.text(f"{assembled.get('reading_2', '')}\n")
     
-    printer.set(align='left', font='a', height=1, width=1)
+    printer.set(align='center', font='a', height=1, width=1)
     printer.text(f"{assembled.get('lucky_number', '')}\n")
     printer.text(f"{assembled.get('moon_phase', '')}\n")
     printer.text(f"{assembled.get('element', '')}\n")

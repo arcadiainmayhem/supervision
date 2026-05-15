@@ -15,7 +15,7 @@ class MiniliskDirector():
             return None
         else:
             from escpos.printer import Usb , File
-            return File(THERMAL_DEVICE_PATH)
+            return File(THERMAL_DEVICE_PATH , profile='RF-F10-80mm' )
         
 
     def composite_thermal_slip(self, visitor):
