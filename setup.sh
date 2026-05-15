@@ -36,10 +36,12 @@ wget -q https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_lan
 wget -q https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task
 wget https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
 
-# CUPS may already be installed on Bookworm, but ensure it's present
-sudo apt install -y cups
-sudo usermod -aG lpadmin arcadia
-# NOTE: Manually add Selphy via http://<pi-ip>:631 after this
+#system package for Thermal Printer
+sudo apt install libusb-1.0-0 -y
+sudo usermod -aG lp arcadia
+echo "usblp" | sudo tee -a /etc/modules
+sudo modprobe usblp  # loads it immediately without needing reboot
 
 
-echo "Done! Run 'source venv/bin/activate' then 'python main.py'"
+
+echo "Done! Run 'source venv/bin/activate' then 'python3 main.py'"

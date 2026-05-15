@@ -134,16 +134,12 @@ class InstallationDirector :
             self.obelisk_director.prepare_selphy_card_print(visitor)
 
         elif visitor["output_type"] == "thermal":
-            # image = self.minilisk_director.composite_thermal_slip(visitor)
-            # #save to visitor dict 
-            # visitor["output_path"] = save(image, visitor , "thermal")
-            # #print after saving from path
-            # self.minilisk_director.prepare_thermal_slip_print(visitor)
-            image = self.obelisk_director.composite_selphy_card(visitor)
+            image = self.minilisk_director.composite_thermal_slip(visitor)
             #save to visitor dict 
-            visitor["output_path"] = save(image, visitor , "selphy")
+            visitor["output_path"] = save(image, visitor , "thermal")
             #print after saving from path
-            self.obelisk_director.prepare_selphy_card_print(visitor)
+            self.minilisk_director.prepare_thermal_slip_print(visitor)
+
 
 
     def _reset(self):

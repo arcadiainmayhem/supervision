@@ -14,12 +14,8 @@ class MiniliskDirector():
         if DEV_MODE:
             return None
         else:
-            #TODO ESCPOS USB Printer init
-            from escpos.printer import Usb
-            vendor_id = THERMAL_VENDOR_ID
-            product_id = THERMAL_PRODUCT_ID
-            return Usb(vendor_id,product_id)
-
+            from escpos.printer import Usb , File
+            return File(THERMAL_DEVICE_PATH)
         
 
     def composite_thermal_slip(self, visitor):
