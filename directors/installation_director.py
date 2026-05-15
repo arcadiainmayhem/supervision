@@ -2,6 +2,7 @@ from .obelisk_director import ObeliskDirector
 from .minilisk_director import MiniliskDirector
 from core.visitor_state import create_visitor_state
 from core.decider.installation_decider import decide
+from core.installation_constants import *
 from computervision.interpreter.interpretation_director import intepret_everything
 from hardware.button.button_listener import register_trigger_button
 from datetime import datetime
@@ -9,6 +10,7 @@ from core.save_manager import save
 import os 
 import signal
 import traceback
+import time
 
 #main coordinator 
 
@@ -27,7 +29,7 @@ class InstallationDirector :
 
         #printer related
         self.is_printing = False
-
+        self.last_trigger_time = 0
         #visitor related
         self.current_visitor = None
         self.current_visitor_score = None
@@ -67,12 +69,23 @@ class InstallationDirector :
         #channel might be a GPIO pin number , a keyboard event or None
         #we dont use it, but accept it gracefully
         print("Button Pressed - Encounter Triggered")
+
+        now = time.time()
+
+        if now - self.last_trigger_time < TRIGGER_DEBOUNCE_SECONDS:
+            print("Too Soon - Trigger Ignored")
+            return
+
+
+
         #check button press / trigger -> gets observation visitor dict from obelisk
         #create visitor + guard against running twice
         if self.is_encounter_running or self.is_printing:
             print("Busy - Trigger Ignored")
             return
         
+        self.last_trigger_time = now
+
         #setting flags to true
         self.is_encounter_running = True
         self.is_printing = True
