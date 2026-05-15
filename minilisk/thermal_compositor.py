@@ -115,12 +115,12 @@ def print_thermal_slip_escpos(assembled, printer):
     title = assembled.get("title")
     if title:
         img = Image.open(f"{ASSETS_DIR}/title/{title}").convert("L")
-        print.image(img)
+        printer.image(img)
 
     seal = assembled.get("emblem_seal")
     if seal:
         img = Image.open(f"{ASSETS_DIR}/emblem_seal/{seal}").convert("L")
-        print.image(img)
+        printer.image(img)
 
     # native text
     printer.set(align='left', font='a', height=2, width=2)
