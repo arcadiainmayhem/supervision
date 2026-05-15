@@ -42,6 +42,10 @@ sudo usermod -aG lp arcadia
 echo "usblp" | sudo tee -a /etc/modules
 sudo modprobe usblp  # loads it immediately without needing reboot
 
+mkdir -p outputs/selphy
+mkdir -p outputs/thermal
 
+# Manual step: run 'sudo visudo' and add:
+# arcadia ALL=(ALL) NOPASSWD: /usr/sbin/cupsdisable, /usr/sbin/cupsenable
 
 echo "Done! Run 'source venv/bin/activate' then 'python3 main.py'"
