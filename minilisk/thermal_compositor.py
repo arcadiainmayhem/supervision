@@ -106,15 +106,16 @@ def print_thermal_slip_escpos(assembled, printer):
     title = assembled.get("title")
     if title:
         img = Image.open(f"{ASSETS_DIR}/title/{title}").convert("RGBA")
-        background = Image.new("RGBA",img.size,(255,255,255,255))
-        background.paste(img , mask=img.split()[3])
-        img = background.convert("1")
+        img = _flatten_for_thermal(img)
+        img = _center_image(img)
         printer.image(img)
 
     seal = assembled.get("emblem_seal")
     if seal:
         img = Image.open(f"{ASSETS_DIR}/emblem_seal/{seal}").convert("1")
-        printer.image(_center_image(img))
+        img = _flatten_for_thermal(img)
+        img = _center_image(img)
+        printer.image(img)
 
     # native text
     printer.set(align='center', font='a', height=2, width=2 , underline = 1)
@@ -129,6 +130,11 @@ def print_thermal_slip_escpos(assembled, printer):
     
     printer.cut()
 
+
+def _flatten_for_thermal(img):
+    background = Image.new("RGBA" , img.size, ( 255 , 255 ,255 ,255))
+    background.paste(img , mask =img.split()[3])
+    return background.convert("1")
 
 
 
