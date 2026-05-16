@@ -27,26 +27,26 @@ class CameraManager:
                     pass
                 self.cam = None
 
-                from picamera2 import Picamera2
-                self.cam = Picamera2()
-                config = self.cam.create_still_configuration(
-                    main = {
+            from picamera2 import Picamera2
+            self.cam = Picamera2()
+            config = self.cam.create_still_configuration(
+                 main = {
                         "size" : RESOLUTION, 
                         "format" : "BGR888"
-                    })
-                self.cam.configure(config)
-                self.cam.start()
+                })
+            self.cam.configure(config)
+            self.cam.start()
 
-                #controls
-                self.cam.set_controls({
+            #controls
+            self.cam.set_controls({
                     "AwBEnable" : True, #auto white balance
                     "AeEnable"  : True, #Auto Exposure
-                })
+            })
 
-                self.isavailable = True #flip flag because cam is available
+            self.isavailable = True #flip flag because cam is available
 
             print("Cam Runnning")
-            
+
         except Exception as e:
             self.cam = None
             self.isavailable = False
@@ -91,7 +91,7 @@ class CameraManager:
 
     def preview_frame(self):
         if self.cam is not None:
-            frame = self.capture_array()
+            frame = self.cam.capture_array()
             frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
             return frame
         return None
