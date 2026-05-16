@@ -37,15 +37,22 @@ class CameraManager:
             self.cam.configure(config)
             self.cam.start()
 
-            #controls
-            self.cam.set_controls({
-                    "AwBEnable" : True, #auto white balance
-                    "AeEnable"  : True, #Auto Exposure
-            })
+
 
             self.isavailable = True #flip flag because cam is available
 
             print("Cam Runnning")
+
+
+            #optional controls
+            try:   
+
+                self.cam.set_controls({
+                        "AwbEnable" : True, #auto white balance
+                        "AeEnable"  : True, #Auto Exposure
+                })
+            except Exception as e:
+                print(f"[CAMERAMANAGER] Controls not applied: {e}")
 
         except Exception as e:
             self.cam = None
