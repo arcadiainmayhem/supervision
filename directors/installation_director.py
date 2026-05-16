@@ -44,7 +44,7 @@ class InstallationDirector :
         self.decision_count = 0
        
 
-    #installtion goes live
+    #installation goes live
     def start(self):
         self.isActive = True
         #button listener
