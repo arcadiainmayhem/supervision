@@ -10,6 +10,8 @@ THERMAL_LINE_HEIGHT  = 50
 
 LINE_HEIGHT = 50
 
+THERMAL_ASSETS_DIR = "test/Thermal_Trial_0905"
+
 SLIP_LAYOUT = {
     "title":          (0, THERMAL_SLIP_BORDER),
     "subtitle":       (THERMAL_SLIP_WIDTH // 3 + 50, LINE_HEIGHT * 3),

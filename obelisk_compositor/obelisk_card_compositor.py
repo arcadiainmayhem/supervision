@@ -1,12 +1,10 @@
 
 import os
 from PIL import Image, ImageDraw
-from obelisk_compositor.obelisk_card_constants import CARD_WIDTH , CARD_HEIGHT , CARD_BG_COLOR 
+from obelisk_compositor.obelisk_card_constants import *
 from obelisk_compositor.obelisk_card_constants import ELEMENT_POSITIONS_IAF , Z_ORDER_IAF
 from core.placeholder_shapes import draw_shapes
 
-
-ASSETS_DIR = "test/Selphy_Trial_1105"
 
 
 def composite_elements(selected):
@@ -19,6 +17,7 @@ def composite_elements(selected):
 
     for layer in Z_ORDER_IAF:
         filename = selected.get(layer)
+        #skip gracefully
         if filename is None:
             continue
         position = ELEMENT_POSITIONS_IAF[layer]

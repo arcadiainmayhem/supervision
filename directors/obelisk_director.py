@@ -73,6 +73,9 @@ class ObeliskDirector():
         try:
             if DEV_MODE:
                 return load_image(DEV_IMAGE_PATH)
+            
+
+
             else:
                 print("Dev Mode", DEV_MODE)
                 print("Camera Object", self.camera.cam)
@@ -96,14 +99,18 @@ class ObeliskDirector():
                 time.sleep(0.03)
                 if frame is not None:
                     #print("Camera is Observing")
-                    if DEV_MODE:
-                        cv2.imshow("Camera Preview", frame)
-                        cv2.waitKey(1)
+                    cv2.imshow("Camera Preview", frame)
+                    cv2.waitKey(1)
                 #timing issue
                 time.sleep(0.03)
 
     def observe(self,visitor):
         frame = self._capture()
+
+        if frame is None:
+            print("'OBELISKDIRECTOR No Frame - using Fallback")
+            frame = load_image(FALLBACK_IMAGE_PATH)
+
         #writes to visitor dictionary
         self.run_pipeline(frame, visitor)
 

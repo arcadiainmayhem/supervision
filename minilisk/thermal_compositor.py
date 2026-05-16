@@ -3,9 +3,9 @@ from minilisk.thermal_slip_constants import *
 from minilisk.thermal_slip_codex import IMAGE_KEYS
 import textwrap
 
-ASSETS_DIR = "test/Thermal_Trial_0905"
 
-FONT_PATH = f"{ASSETS_DIR}/Fonts/Merchant_Copy.ttf"
+
+FONT_PATH = f"{THERMAL_ASSETS_DIR}/Fonts/Merchant_Copy.ttf"
 FONT_LARGE = ImageFont.truetype(FONT_PATH, 72)
 FONT_MEDIUM = ImageFont.truetype(FONT_PATH, 62)
 FONT_SMALL = ImageFont.truetype(FONT_PATH, 40)
@@ -22,7 +22,7 @@ def compose_slip(assembled_data):
     title = assembled_data.get("title")
     if title:
         try:
-            img = Image.open(f"{ASSETS_DIR}/title/{title}").convert("RGBA")
+            img = Image.open(f"{THERMAL_ASSETS_DIR}/title/{title}").convert("RGBA")
             canvas.paste(img, (0, y), img)
             y += img.height + PADDING
         except FileNotFoundError:
@@ -32,7 +32,7 @@ def compose_slip(assembled_data):
     seal = assembled_data.get("emblem_seal")
     if seal:
         try:
-            img = Image.open(f"{ASSETS_DIR}/emblem_seal/{seal}").convert("RGBA")
+            img = Image.open(f"{THERMAL_ASSETS_DIR}/emblem_seal/{seal}").convert("RGBA")
             x = (THERMAL_SLIP_WIDTH - img.width) // 2
             canvas.paste(img, (x, y), img)
             y += img.height + PADDING
@@ -68,7 +68,7 @@ def print_thermal_slip_escpos(assembled_data , printer):
     title = assembled_data.get("title")
     if title:
         try :
-            img = Image.open(f"{ASSETS_DIR}/title/{title}").convert("L")
+            img = Image.open(f"{THERMAL_ASSETS_DIR}/title/{title}").convert("L")
             print.img(img)
         except FileNotFoundError:
             print("Missing Title: {title}")
@@ -77,7 +77,7 @@ def print_thermal_slip_escpos(assembled_data , printer):
     if seal:
         try:
             img = Image.open()
-            img = Image.open(f"{ASSETS_DIR}/emblem_seal/{seal}").convert("L")
+            img = Image.open(f"{THERMAL_ASSETS_DIR}/emblem_seal/{seal}").convert("L")
             printer.set(align='center')
             printer.image(img)
         except FileNotFoundError:
@@ -105,14 +105,14 @@ def print_thermal_slip_escpos(assembled, printer):
     #images
     title = assembled.get("title")
     if title:
-        img = Image.open(f"{ASSETS_DIR}/title/{title}").convert("RGBA")
+        img = Image.open(f"{THERMAL_ASSETS_DIR}/title/{title}").convert("RGBA")
         img = _flatten_for_thermal(img)
         img = _center_image(img)
         printer.image(img)
 
     seal = assembled.get("emblem_seal")
     if seal:
-        img = Image.open(f"{ASSETS_DIR}/emblem_seal/{seal}").convert("RGBA")
+        img = Image.open(f"{THERMAL_ASSETS_DIR}/emblem_seal/{seal}").convert("RGBA")
         img = _flatten_for_thermal(img)
         img = _center_image(img)
         printer.image(img)
