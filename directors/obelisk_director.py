@@ -99,13 +99,17 @@ class ObeliskDirector():
                     frame = self.camera.preview_frame()
                 time.sleep(0.03)
                 
-                if frame is not None:
-                    #print("Camera is Observing")
-                    if SHOW_PREVIEW:
-                        cv2.imshow("Camera Preview", frame)
-                        cv2.waitKey(1)
-                else:
+                # if frame is not None:
+                #     #print("Camera is Observing")
+                #     if SHOW_PREVIEW:
+                #         cv2.imshow("Camera Preview", frame)
+                #         cv2.waitKey(1)
+                # else:
+                #     print("[OBELISKDIRECTOR - PREVIEW] Frame is None")
+
+                if frame is None:
                     print("[OBELISKDIRECTOR - PREVIEW] Frame is None")
+
 
                 #timing issue
                 time.sleep(0.03)
@@ -126,7 +130,7 @@ class ObeliskDirector():
             cv2.waitKey(1)
 
 
-            
+
     def pause_observe(self, visitor):
         pass
         
@@ -184,10 +188,6 @@ class ObeliskDirector():
         visitor["hue_category"] = categorised["hue_category"]
         visitor["brightness"] = categorised["brightness"]
 
-        # #selected elements / pngs
-        # selection = select(categorised)
-        # visitor["selected_elements"] = selection
-        
         #later for memory?
 
     def _return_visitor( self , visitor):
