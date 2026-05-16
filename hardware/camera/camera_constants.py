@@ -9,7 +9,7 @@ FORMAT = "BGR888"
 
 
 RESOLUTION = (CAMERA_WIDTH, CAMERA_HEIGHT)
-
+SHOW_PREVIEW = True #set false when running headless
 
 #FALLBACK IMAGE FOR DEV
-DEV_IMAGE_PATH = "test/6.jpg"
+DEV_IMAGE_PATH = "test/fallback/6.jpg"

@@ -13,7 +13,8 @@ def create_visitor_state(visitor_number):
 
     #Observation
     "camera_frame" : None,
-
+    "detected_results" : None,
+    
     "color_saturation": 0,
     "color_hue": 0,
     "color_value": 0,

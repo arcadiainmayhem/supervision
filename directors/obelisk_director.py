@@ -18,6 +18,7 @@ from computervision.mediapipe.detection.facedetection import setup_face_object
 from computervision.mediapipe.detection.handdetection import setup_hand_object
 from computervision.mediapipe.detection.gesture_recognizer import setup_gesture_object
 from computervision.mediapipe.mediapipe_interpreter import interpret_all_mediapipe_detection
+from computervision.mediapipe.detection.drawing_utils import draw_detections
 
 from hardware.camera.camera_manager import CameraManager
 from obelisk_compositor.obelisk_card_selector import select
@@ -100,8 +101,9 @@ class ObeliskDirector():
                 
                 if frame is not None:
                     #print("Camera is Observing")
-                    cv2.imshow("Camera Preview", frame)
-                    cv2.waitKey(1)
+                    if SHOW_PREVIEW:
+                        cv2.imshow("Camera Preview", frame)
+                        cv2.waitKey(1)
                 else:
                     print("[OBELISKDIRECTOR - PREVIEW] Frame is None")
 
@@ -118,6 +120,13 @@ class ObeliskDirector():
         #writes to visitor dictionary
         self.run_pipeline(frame, visitor)
 
+        if SHOW_PREVIEW:
+            annotated = draw_detections(visitor["camera_frame"] , visitor["detected_results"])
+            cv2.imshow("Detection Preview", annotated)
+            cv2.waitKey(1)
+
+
+            
     def pause_observe(self, visitor):
         pass
         
@@ -133,6 +142,8 @@ class ObeliskDirector():
         #parsed from mediapipe
         detected_results = orchestrate_detection_pipeline(frame , self.body_detector, self.face_detector , self.hand_detector , self.gesture_recognizer )
         intepreted_results = interpret_all_mediapipe_detection(detected_results)
+
+        visitor["detected_results"] = detected_results
 
         region_crop = extract_coordinates(detected_results , frame) # for specific region crop
         hsv_crop = cv2.cvtColor(region_crop , cv2.COLOR_BGR2HSV)
