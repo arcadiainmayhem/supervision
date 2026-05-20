@@ -1,16 +1,19 @@
-from .obelisk_director import ObeliskDirector
-from .minilisk_director import MiniliskDirector
-from core.visitor_state import create_visitor_state
-from core.decider.installation_decider import decide
-from core.installation_constants import *
-from computervision.interpreter.interpretation_director import intepret_everything
-from hardware.button.button_listener import register_trigger_button
-from datetime import datetime
-from core.save_manager import save
 import os 
 import signal
 import traceback
 import time
+
+from .obelisk_director import ObeliskDirector
+# from .minilisk_director import MiniliskDirector
+
+from core.visitor_state import create_visitor_state
+from core.decider.installation_decider import decide
+from core.installation_constants import *
+
+from computervision.interpreter.interpretation_director import intepret_everything
+from hardware.button.button_listener import register_trigger_button
+from datetime import datetime
+from core.save_manager import save
 
 #main coordinator 
 
@@ -20,7 +23,6 @@ class InstallationDirector :
         #stores references to other directors
         #start + store instance of Director - Only one
         self.obelisk_director = ObeliskDirector()
-        self.minilisk_director =  MiniliskDirector()
         
         #hardware
         #button related
@@ -48,7 +50,6 @@ class InstallationDirector :
     def start(self):
         self.isActive = True
         #button listener
-        self.obelisk_director.start_watching()
         #setup button listener + initialise
         register_trigger_button(self._run_encounter)
 
@@ -101,9 +102,7 @@ class InstallationDirector :
             self._evaluate_visitor_profile(self.current_visitor) #decide + score value type
             #select elements for selphy
             self.obelisk_director.select_elements(self.current_visitor)
-            #select readings for thermal
-            self.minilisk_director.assemble_slip(self.current_visitor)
-        
+   
 
             self._route_output(self.current_visitor)
 
@@ -123,6 +122,7 @@ class InstallationDirector :
             print(f"Encounter Failed: {e}")
             #prints full error with exact file
             traceback.print_exc()
+
         finally:
             #resets flags so it can be triggered again
             self.last_trigger_time = time.time()
@@ -154,14 +154,7 @@ class InstallationDirector :
             #print after saving from path
             self.obelisk_director.prepare_selphy_card_print(visitor)
 
-        elif visitor["output_type"] == "thermal":
-            image = self.minilisk_director.composite_thermal_slip(visitor)
-            #save to visitor dict 
-            visitor["output_path"] = save(image, visitor , "thermal")
-            #print after saving from path
-            self.minilisk_director.prepare_thermal_slip_print(visitor)
 
-   
 
     def _reset(self):
         self.current_visitor = None
@@ -173,9 +166,6 @@ class InstallationDirector :
     def stop(self):
         self.isActive = False
         #tell obelisk to stop watching
-        #button on standby
-        #release camera
-        self.obelisk_director._stop_camera()
         #stop printers
 
     #full shutdown

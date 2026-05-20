@@ -11,6 +11,7 @@ def decide(visitor):
     )
 
     visitor["satisfaction_score"] = final_score
+    visitor["output_type"] = "selphy"
 
     #rarity_tier - filters to 3 types of rarity
     if final_score >= RARITY_RARE_MIN:
@@ -20,8 +21,8 @@ def decide(visitor):
     else:
         visitor["rarity_tier"] = "common"
 
-    # output type
-    if final_score >= OUTPUT_SELPHY_THRESHOLD:
-        visitor["output_type"] = "selphy"
-    else:
-        visitor["output_type"] = "thermal"
+    # # output type
+    # if final_score >= OUTPUT_SELPHY_THRESHOLD:
+    #     visitor["output_type"] = "selphy"
+    # else:
+    #     visitor["output_type"] = "thermal"

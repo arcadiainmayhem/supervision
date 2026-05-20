@@ -1,10 +1,10 @@
 import time
-from hardware.button.button_listener import register_trigger_button
+import numpy as np
 import cv2
 import threading
 import subprocess
+import requests
 from PIL import Image
-from hardware.camera.camera_constants import *
 from core.installation_constants import *
 from computervision.extractor import extract_color
 from computervision.classifier import classify
@@ -20,7 +20,6 @@ from computervision.mediapipe.detection.gesture_recognizer import setup_gesture_
 from computervision.mediapipe.mediapipe_interpreter import interpret_all_mediapipe_detection
 from computervision.mediapipe.detection.drawing_utils import draw_detections
 
-from hardware.camera.camera_manager import CameraManager
 from obelisk_compositor.obelisk_card_selector import select
 from obelisk_compositor.obelisk_card_compositor import composite_elements
 
@@ -35,20 +34,22 @@ class ObeliskDirector():
 
     def __init__(self):
         #runs once
-        self.camera = CameraManager()
-        print("Camera Starting Up")
-        #start camera
-        self.camera.start()
-
         #obelisk variables
         self.isWatching = False
     
         #printing state flag     
         self.isPrinting = False
+        #camera availability
+        self.camera_available = True
 
-        #theadings
-        self.preview_thread = None
-        self.frame_lock = threading.Lock() #like a flag - free or taken
+        #threadings
+
+        #start health check
+        self.health_check_thread = threading.Thread(target= self._camera_health_check_loop)
+        self.health_check_thread.daemon = True
+        self.health_check_thread.start()
+
+
 
         #current running data
         self.current_observation = None
@@ -59,60 +60,78 @@ class ObeliskDirector():
         self.hand_detector = setup_hand_object()
         self.gesture_recognizer = setup_gesture_object()
 
-    def start_watching(self):
-        self.isWatching = True
-        self.preview_thread = threading.Thread(target=self.passive_continuous_observation)
-        self.preview_thread.daemon = True
-        self.preview_thread.start()
 
-    def stop_watching(self):
-        self.isWatching = False
         
+    def _camera_health_check_loop(self):
+        while True:
+            try:
+                response = requests.get(
+                    f"http://{CAMERA_PI_IP}:{CAMERA_PI_PORT}/health",
+                    timeout=3
+                )
+                if response.status_code == 200:
+                    if not self.camera_available:
+                        print("[OBELISKDIRECTOR] Camera Pi back online")
+                    self.camera_available = True
+
+                else:
+                    if self.camera_available:
+                        print(f"[OBELISKDIRECTOR] Camera Pi unhealthy: {response.status_code}")
+                    self.camera_available = False
+
+            except Exception as e:
+                if self.camera_available:
+                    print(f"[OBELISKDIRECTOR] Camera Pi unreachable {e}")
+                self.camera_available = False
+            
+            time.sleep(CAMERA_HEALTH_CHECK_INTERVAL)
+
 
 
     def _capture(self):
-        try:
-            if DEV_MODE:
-                return load_image(DEV_IMAGE_PATH)
-            
 
-
-            else:
-                print("Dev Mode", DEV_MODE)
-                print("Camera Object", self.camera.cam)
-                with self.frame_lock:
-                    return self.camera.capture()
-            
-        except Exception as e:
-            print(f"Camera capture failed: {e} — loading fallback image")
+        if DEV_MODE:
             return load_image(FALLBACK_IMAGE_PATH)
+        
+        try:
+            response = requests.get(f"http://{CAMERA_PI_IP}:{CAMERA_PI_PORT}/frame", timeout = 5)
+            if response.status_code == 200:
+                jpg_bytes = np.frombuffer(response.content , dtype=np.uint8)
+                return cv2.imdecode(jpg_bytes,cv2.IMREAD_COLOR)
+            else:
+                print(f"[OBELISKDIRECTOR] Camera Pi Returned { response.status_code} - using fallback")
+                return load_image(FALLBACK_IMAGE_PATH)
 
+
+        except Exception as e:
+            print(f"Camera Pi request failed: {e} — using fallback")
+            return load_image(FALLBACK_IMAGE_PATH)
         
     def read_frame(self):
         #read frames for passive sampling
         pass
 
-    def passive_continuous_observation(self):
-        while self.isWatching:
-            #TODO: TREADING
-                with self.frame_lock: #acquire lock
-                    frame = self.camera.preview_frame()
-                time.sleep(0.03)
+    # def passive_continuous_observation(self):
+    #     while self.isWatching:
+    #         #TODO: TREADING
+    #             with self.frame_lock: #acquire lock
+    #                 frame = self.camera.preview_frame()
+    #             time.sleep(0.03)
                 
-                # if frame is not None:
-                #     #print("Camera is Observing")
-                #     if SHOW_PREVIEW:
-                #         cv2.imshow("Camera Preview", frame)
-                #         cv2.waitKey(1)
-                # else:
-                #     print("[OBELISKDIRECTOR - PREVIEW] Frame is None")
+    #             # if frame is not None:
+    #             #     #print("Camera is Observing")
+    #             #     if SHOW_PREVIEW:
+    #             #         cv2.imshow("Camera Preview", frame)
+    #             #         cv2.waitKey(1)
+    #             # else:
+    #             #     print("[OBELISKDIRECTOR - PREVIEW] Frame is None")
 
-                if frame is None:
-                    print("[OBELISKDIRECTOR - PREVIEW] Frame is None")
+    #             if frame is None:
+    #                 print("[OBELISKDIRECTOR - PREVIEW] Frame is None")
 
 
-                #timing issue
-                time.sleep(0.03)
+    #             #timing issue
+    #             time.sleep(0.03)
 
     def observe(self,visitor):
         frame = self._capture()
@@ -124,7 +143,7 @@ class ObeliskDirector():
         #writes to visitor dictionary
         self.run_pipeline(frame, visitor)
 
-        if SHOW_PREVIEW:
+        if SHOW_DETECTIONS:
             annotated = draw_detections(visitor["camera_frame"] , visitor["detected_results"])
             cv2.imshow("Detection Preview", annotated)
             cv2.waitKey(1)
@@ -240,8 +259,4 @@ class ObeliskDirector():
             print("Selphy Print Job Completed")    
         except Exception as e:
             print(f"Selphy print failed: {e}")
-
-    def _stop_camera(self):
-        self.stop_watching() #stop thread before stopping camera
-        self.camera.stop()
 
