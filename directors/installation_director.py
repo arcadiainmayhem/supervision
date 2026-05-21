@@ -4,7 +4,6 @@ import traceback
 import time
 
 from .obelisk_director import ObeliskDirector
-# from .minilisk_director import MiniliskDirector
 
 from core.visitor_state import create_visitor_state
 from core.decider.installation_decider import decide
@@ -15,6 +14,9 @@ from hardware.button.button_listener import register_trigger_button
 from datetime import datetime
 from core.save_manager import save
 
+from hardware.led.led_manager import LEDManager
+from hardware.led.led_states import *
+
 #main coordinator 
 
 class InstallationDirector :
@@ -23,7 +25,9 @@ class InstallationDirector :
         #stores references to other directors
         #start + store instance of Director - Only one
         self.obelisk_director = ObeliskDirector()
-        
+        #start one instance of LEDManager
+        self.led_manager = LEDManager()
+
         #hardware
         #button related
         self.isButtonActive = False
@@ -41,9 +45,14 @@ class InstallationDirector :
         self.isActive = False
         self.isDeciding = False
         self.is_encounter_running = False
+
         #to store # of decisions made during installation
         self.madeDecision = False
         self.decision_count = 0
+
+
+        #set initial led state to idle
+        self.led_manager.set_state(LEDState.IDLE)
        
 
     #installation goes live
@@ -92,6 +101,9 @@ class InstallationDirector :
         self.is_encounter_running = True
         self.is_printing = True
         try:
+            #[ENCOUNTER TRIGGERED]
+            self.led_manager.set_state(LEDState.TRIGGERED)
+            #[VISITOR CREATED]
             self.current_visitor =  self.create_visitor()
 
             self.obelisk_director.observe(self.current_visitor) #captures frame and runs pipeline
@@ -99,26 +111,32 @@ class InstallationDirector :
             #intepret and store in visitor dict
             intepret_everything(self.current_visitor)
 
+            #[PROCESSING ENCOUNTER TRIGGERED]
+            self.led_manager.set_state(LEDState.PROCESSING)
             self._evaluate_visitor_profile(self.current_visitor) #decide + score value type
+
             #select elements for selphy
             self.obelisk_director.select_elements(self.current_visitor)
    
-
+            #select printer
             self._route_output(self.current_visitor)
 
+            #[COMPLETED TRIGGERED]
+            self.led_manager.set_state(LEDState.COMPLETED)
             print('Route Output Done')
             #add visitor to history to measure length
             self._add_to_visitor_history(self.current_visitor)
-
             print('History Added')
             #log endtime
             self.current_visitor["end_time"] = datetime.now()
 
             #reset and prepare for next visitor
             self._reset()
+
             print('Reset Done')
 
         except Exception as e:
+            self.led_manager.set_state(LEDState.ERROR)
             print(f"Encounter Failed: {e}")
             #prints full error with exact file
             traceback.print_exc()
@@ -127,7 +145,6 @@ class InstallationDirector :
             #resets flags so it can be triggered again
             self.last_trigger_time = time.time()
             print("Last Trigger Time: ", self.last_trigger_time)
-
 
             self.is_encounter_running = False
             self.is_printing = False
@@ -146,7 +163,7 @@ class InstallationDirector :
         self.encounter_history.append(visitor)
 
     def _route_output(self , visitor):
-
+        self.led_manager.set_state(LEDState.PRINTING)
         if visitor["output_type"] == "selphy":
             image = self.obelisk_director.composite_selphy_card(visitor)
             #save to visitor dict 
@@ -157,6 +174,7 @@ class InstallationDirector :
 
 
     def _reset(self):
+        self.led_manager.set_state(LEDState.IDLE)
         self.current_visitor = None
         self.current_visitor_score = None
         self.is_encounter_running = False
@@ -171,8 +189,7 @@ class InstallationDirector :
     #full shutdown
     def shutdown(self , channel = None):
         self.stop()
-        #additional cleanup
-        #cleanup for
+        #additional cleanup + cleanup for
         #shutdown os
         os.system("sudo shutdown now")
 
