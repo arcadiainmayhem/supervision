@@ -223,7 +223,6 @@ class ObeliskDirector():
         return output_image
     
     def prepare_selphy_card_print(self,visitor):
-        #output_image.save("test/output.png")
         if DEV_MODE:
             img = Image.open(visitor["output_path"])
             img.show()

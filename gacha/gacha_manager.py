@@ -17,6 +17,8 @@ class GachaManager():
 
 
     def check_gacha(self, visitor):
+
+
         #if already fired, automatic false
         if self.has_fired_today:
             return False
@@ -42,9 +44,10 @@ class GachaManager():
             return True
 
     
-    
-        return False
-
+        #for testing
+        return True
+        #return False
+        
     def _check_date_reset(self):
         today = datetime.now().date()
 
