@@ -1,5 +1,5 @@
-from led_states import LEDState
-from hardware_config import *
+from hardware.led.led_states import LEDState
+from hardware.hardware_config import *
 from core.installation_constants import *
 import threading
 import time
