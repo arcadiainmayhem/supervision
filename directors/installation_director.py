@@ -17,6 +17,9 @@ from core.save_manager import save
 from hardware.led.led_manager import LEDManager
 from hardware.led.led_states import LEDState
 
+from gacha.gacha_manager import GachaManager
+from gacha.gacha_compositor import corrupt
+
 #main coordinator 
 
 class InstallationDirector :
@@ -27,7 +30,8 @@ class InstallationDirector :
         self.obelisk_director = ObeliskDirector()
         #start one instance of LEDManager
         self.led_manager = LEDManager()
-
+        #instance of Gacha Manager
+        self.gacha_manager = GachaManager()
         #hardware
         #button related
         self.isButtonActive = False
@@ -52,8 +56,8 @@ class InstallationDirector :
 
 
         #set initial led state to idle
+    
         self.led_manager.set_state(LEDState.IDLE)
-       
 
     #installation goes live
     def start(self):
@@ -163,11 +167,26 @@ class InstallationDirector :
         self.encounter_history.append(visitor)
 
     def _route_output(self , visitor):
+
         self.led_manager.set_state(LEDState.PRINTING)
+
         if visitor["output_type"] == "selphy":
             image = self.obelisk_director.composite_selphy_card(visitor)
             #save to visitor dict 
             visitor["output_path"] = save(image, visitor , "selphy")
+         
+            #check gacha 
+
+            if self.gacha_manager.check_gacha(visitor):
+                try:
+                    corrupted_path = corrupt(visitor["output_path"])
+                    print("[INSTALLATIONDIRECTOR] Corrupting Image")
+                    visitor["output_path"] = corrupted_path
+                except Exception as e:
+                    print(f"[INSTALLTIONDIRECTOR] Gacha Corruption Failed : {e} - printing normal card")
+
+
+
             #print after saving from path
             self.obelisk_director.prepare_selphy_card_print(visitor)
 

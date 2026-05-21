@@ -43,7 +43,9 @@ echo "usblp" | sudo tee -a /etc/modules
 sudo modprobe usblp  # loads it immediately without needing reboot
 
 mkdir -p outputs/selphy
-mkdir -p outputs/thermal
+
+# Enable PWM for WS2812B LEDs
+echo "core_freq=500" | sudo tee -a /boot/firmware/config.txt
 
 # Manual step: run 'sudo visudo' and add:
 # arcadia ALL=(ALL) NOPASSWD: /usr/sbin/cupsdisable, /usr/sbin/cupsenable
