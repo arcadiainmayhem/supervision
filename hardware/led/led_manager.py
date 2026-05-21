@@ -3,7 +3,7 @@ from hardware.hardware_config import *
 from core.installation_constants import *
 import threading
 import time
-from led_constants import *
+from hardware.led.led_constants import *
 
 #only on pi
 if not DEV_MODE:
