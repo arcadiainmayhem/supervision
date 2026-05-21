@@ -19,6 +19,7 @@ def corrupt(filepath):
     selected = effects[:count]
 
     for effect in selected:
+        print(f"[GACHAMANAGER] Effects Applied : {effect}")
         image = effect(image)
 
 
