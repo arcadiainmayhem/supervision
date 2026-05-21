@@ -15,7 +15,7 @@ from datetime import datetime
 from core.save_manager import save
 
 from hardware.led.led_manager import LEDManager
-from hardware.led.led_states import *
+from hardware.led.led_states import LEDState
 
 #main coordinator 
 
