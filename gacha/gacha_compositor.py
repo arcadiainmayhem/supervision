@@ -9,7 +9,7 @@ def corrupt(filepath):
 
     image = Image.open(filepath)
     
-    effects = [_chromatic_abberation, _pixel_sort, _scanlines, _vignette]
+    effects = [_chromatic_abberation, _pixel_band_sort, _scanlines, _vignette]
     #shuffle order
     random.shuffle(effects)
 
@@ -93,7 +93,7 @@ def _vignette(image):
             dx = (x - width/2 )/(width /2)
             dy = (y - height /2 )/ (height / 2)
             dist = min(1.0, (dx**2 + dy**2) ** 0.5)
-            vignette.putpixel((x,y),int(dist * 180))
+            vignette.putpixel((x,y),int(dist * VIGNETTE_MULTI))
 
 
     image = image.convert("RGBA")
@@ -105,3 +105,23 @@ def _vignette(image):
 
 
     return Image.merge("RGBA", (r, g, b, a)).convert("RGB")
+
+def _pixel_band_sort(image):
+    img_array = np.array(image)
+    height = img_array.shape[0]
+    
+    # sort only random bands
+    num_bands = random.randint(3, 8)
+    for _ in range(num_bands):
+        y_start = random.randint(0, height - 20)
+        band_height = random.randint(5, 20)
+        y_end = min(y_start + band_height, height)
+        
+        band = img_array[y_start:y_end, :, :]
+        brightness = band.mean(axis=2)
+        indices = np.argsort(brightness, axis=1)
+        for c in range(3):
+            band[:, :, c] = np.take_along_axis(band[:, :, c], indices, axis=1)
+        img_array[y_start:y_end, :, :] = band
+    
+    return Image.fromarray(img_array)
