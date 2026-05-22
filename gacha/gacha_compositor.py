@@ -9,7 +9,7 @@ def corrupt(filepath):
 
     image = Image.open(filepath)
     
-    effects = [_chromatic_abberation, _pixel_band_sort, _scanlines, _vignette]
+    effects = [_chromatic_abberation, _glitch_shift, _ghost_print ,_pixel_band_sort, _scanlines, _vignette]
     #shuffle order
     random.shuffle(effects)
 
@@ -125,3 +125,42 @@ def _pixel_band_sort(image):
         img_array[y_start:y_end, :, :] = band
     
     return Image.fromarray(img_array)
+
+def _ghost_print(image):
+    img_array = np.array(image).astype(np.float32)
+
+    offset_x = random.randint(CHROMATIC_ABBERATION_OFFSET_MIN,CHROMATIC_ABBERATION_OFFSET_MAX)
+    offset_y = random.randint(CHROMATIC_ABBERATION_OFFSET_MIN,CHROMATIC_ABBERATION_OFFSET_MAX)
+
+    #two ghost copies shifted in different direction
+    ghost1 = np.roll(img_array , offset_x ,axis = 1) #shift right
+    ghost2 = np.roll(img_array , offset_y , axis = 0) #shift up
+
+    #blend all three 
+    result = (img_array * 0.6 + ghost1 * 0.3 + ghost2 * 0.2)
+    result = np.clip(result , 0 , 255)
+
+    return Image.fromarray(result.astype(np.uint8))
+
+def _glitch_shift(image):
+    img_array = np.array(image)
+
+    height = img_array.shape[0]
+
+    num_bands= random.randint(GLITCH_SHIFT_BANDS_MIN , GLITCH_SHIFT_AMOUNT_MAX)
+
+
+    for _ in range(num_bands):
+        y_start = random.randint(0 , height - GLITCH_BAND_HEIGHT_MAX)
+        band_height = random.randint(GLITCH_BAND_HEIGHT_MIN , GLITCH_BAND_HEIGHT_MAX)
+
+        y_end = min(y_start + band_height, height)
+
+        shift = random.randint(GLITCH_SHIFT_AMOUNT_MIN , GLITCH_SHIFT_AMOUNT_MAX)
+
+        direction = random.choice([1 , -1])
+
+        img_array[y_start:y_end] = np.roll(img_array[y_start:y_end] , shift*direction, axis  =1)
+        
+        
+        return Image.fromarray(img_array)

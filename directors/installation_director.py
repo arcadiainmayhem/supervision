@@ -42,6 +42,7 @@ class InstallationDirector :
         #printer related
         self.is_printing = False
         self.last_trigger_time = 0
+        
         #visitor related
         self.current_visitor = None
         self.current_visitor_score = None
@@ -137,7 +138,7 @@ class InstallationDirector :
             #[EARLY RETURN IF NOT SUCCESS]
             if not success:
                 print(f"[INSTALLATIONDIRECTOR] Print failed — resetting debounce for retry ")
-                self.last_trigger_time = 0 #allows immediate retry
+                self.last_trigger_time = PRINT_ERROR_COOLDOWN #allows immediate retry
                 status_logger.update_status("state" , "error")
 
             #[UPDATE SERVER STATUS]

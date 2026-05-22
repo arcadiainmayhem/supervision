@@ -30,7 +30,7 @@ def _color(value):
     
 
 def _encounter_row(e):
-    printed = "✓" if e["printed"] else "x"
+    printed = "✓" if e["printed"] else "✗"
     return f'<tr><td>{e["visitor_number"]}</td></td> {e["timestamp"]}</td></td> {e["rarity"]}</td></td>{e["score"]}</td></td>{"printed"}</td></tr>'
 
 def start_status_server():
