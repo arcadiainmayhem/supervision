@@ -20,6 +20,8 @@ from hardware.led.led_states import LEDState
 from gacha.gacha_manager import GachaManager
 from gacha.gacha_compositor import corrupt
 
+from monitoring.status_server import start_in_thread
+from monitoring import status_logger
 #main coordinator 
 
 class InstallationDirector :
@@ -56,8 +58,11 @@ class InstallationDirector :
 
 
         #set initial led state to idle
-    
         self.led_manager.set_state(LEDState.IDLE)
+
+        #start thread for server monitoring
+        start_in_thread()
+        print(f"[INSTALLTIONDIECTOR] Status serve stated on port, {STATUS_SERVER_PORT}")
 
     #installation goes live
     def start(self):
@@ -105,13 +110,17 @@ class InstallationDirector :
         self.is_encounter_running = True
         self.is_printing = True
         try:
+            #[UPDATE SERVER STATUS]
+            status_logger.update_status("state" , "triggered")
+
             #[ENCOUNTER TRIGGERED]
             self.led_manager.set_state(LEDState.TRIGGERED)
             #[VISITOR CREATED]
             self.current_visitor =  self.create_visitor()
 
             self.obelisk_director.observe(self.current_visitor) #captures frame and runs pipeline
-        
+            #[UPDATE SERVER STATUS]
+            status_logger.update_status("state" , "processing")        
             #intepret and store in visitor dict
             intepret_everything(self.current_visitor)
 
@@ -124,7 +133,9 @@ class InstallationDirector :
    
             #select printer
             self._route_output(self.current_visitor)
-
+            #[UPDATE SERVER STATUS]
+            status_logger.log_encounter(self.current_visitor)
+            status_logger.update_status("state" , "prirnting")     
             #[COMPLETED TRIGGERED]
             self.led_manager.set_state(LEDState.COMPLETED)
             print('Route Output Done')
@@ -141,7 +152,12 @@ class InstallationDirector :
 
         except Exception as e:
             self.led_manager.set_state(LEDState.ERROR)
+
             print(f"Encounter Failed: {e}")
+            #[UPDATE SERVER STATUS]
+            status_logger.log_encounter("Installation Director", str(e))
+            status_logger.update_status("state" , "error")
+
             #prints full error with exact file
             traceback.print_exc()
 

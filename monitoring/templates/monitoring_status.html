@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Prima Materia - Status </title>
+    <meta name="viewport" content="width=device-width , initial-scale=1">
+    <meta http-equiv="refresh" content="10">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
+
+
+</head>
+
+<body>
+
+
+    <h1>Prima Materia</h1>
+
+    <p>State: {{ status.state }}</p>
+    <p>Triggers today: {{ status.triggers_today }}</p>
+    <p>Printer: <span class="{{ status.printer }}">{{ status.printer }}</span></p>
+    <p>Camera: <span class="{{ status.camera }}">{{ status.camera }}</span></p>
+
+    <h2>Encounters</h2>
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Rarity</th>
+            <th>Score</th>
+            <th>Printed</th>
+        </tr>
+        {% for e in encounters %}
+        <tr>
+            <td>{{ e.visitor_number }}</td>
+            <td>{{ e.timestamp }}</td>
+            <td>{{ e.rarity }}</td>
+            <td>{{ e.score }}</td>
+            <td>{{ "✓" if e.printed else "✗" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Errors</h2>
+    {% for e in errors %}
+    <p class="error">{{ e.time }} [{{ e.source }}] {{ e.message }}</p>
+    {% endfor %}
+    {% if not errors %}
+    <p>None</p>
+    {% endif %}
+
+</body>
+
+</html>

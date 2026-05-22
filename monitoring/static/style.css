@@ -1,0 +1,17 @@
+       
+       
+       
+       
+       
+
+       body { font-family: monospace; padding: 20px; background: #111; color: #eee; }
+
+        h1 { color: #fff; }
+
+        .ok { color: #0f0; }
+        .error { color: #f00; }
+        .unknown { color: #ff0; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        td, th { padding: 6px; border-bottom: 1px solid #333; text-align: left; }
+        th { color: #aaa; }

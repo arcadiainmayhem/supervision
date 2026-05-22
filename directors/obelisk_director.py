@@ -23,6 +23,8 @@ from computervision.mediapipe.detection.drawing_utils import draw_detections
 from obelisk_compositor.obelisk_card_selector import select
 from obelisk_compositor.obelisk_card_compositor import composite_elements
 
+
+from monitoring import status_logger
 #Observe
 
 #Accumulate
@@ -72,6 +74,7 @@ class ObeliskDirector():
                 if response.status_code == 200:
                     if not self.camera_available:
                         print("[OBELISKDIRECTOR] Camera Pi back online")
+                        status_logger.update_status("camera","online")
                     self.camera_available = True
 
                 else:
@@ -82,6 +85,7 @@ class ObeliskDirector():
             except Exception as e:
                 if self.camera_available:
                     print(f"[OBELISKDIRECTOR] Camera Pi unreachable {e}")
+                    status_logger.update_status("camera","unreachable")
                 self.camera_available = False
             
             time.sleep(CAMERA_HEALTH_CHECK_INTERVAL)
@@ -171,8 +175,6 @@ class ObeliskDirector():
         region_crop = extract_coordinates(detected_results , frame) # for specific region crop
         hsv_crop = cv2.cvtColor(region_crop , cv2.COLOR_BGR2HSV)
 
-
-
         #writing to visitor state dict
         visitor["face_detected"] = intepreted_results["face_detected"]
         visitor["face_orientation"] = intepreted_results["face_orientation"]
@@ -231,31 +233,67 @@ class ObeliskDirector():
 
 
     def _print_selphy_card(self, visitor):
-        
+
         #send output image to Selphy via CUPS
         try:
             filepath = visitor["output_path"]
+
+            if SKIP_PRINT:
+                print(f"[OBELISKDIRECTOR] SKIP_PRINT enabled — skipping: {filepath}")
+            return
+
             print(f"[TEST] Would print: {filepath}")
-            #reset CUPS connection to printer
+            
+            #[UPDATE STATUS OF PRINTER]
+            status_logger.update_status("printer" , "resetting")
+
+            #reset CUPS connection to printer so printer wont get stuck
             subprocess.run(["sudo" , "cupsdisable" , SELPHY_PRINTER_NAME] , check=False)
             time.sleep(2)
             subprocess.run(["sudo" , "cupsenable" , SELPHY_PRINTER_NAME] , check=False)
             time.sleep(2)
 
+            #check printer status via CUPS - generates readable lines
+            check = subprocess,run(["lp" , 
+                                    "-p" ,
+                                    SELPHY_PRINTER_NAME,],
+                                    capture_output = True,
+                                    text = True)
 
-            #output_image.save(filepath)
-            result = subprocess.run(["lp" , "-d", 
-                                     SELPHY_PRINTER_NAME , filepath] , 
-                                     check=True , 
-                                     capture_output=True , 
-                                     text = True)
+            print(f"[SELPHYPRINTER] Status : {check.stdout}")
+            status_logger.log_error("Selphy" , check.stdout.strip())
+
+            #send to printer to print
+            # result = subprocess.run(["lp" , "-d", 
+            #                          SELPHY_PRINTER_NAME , 
+            #                          filepath] , 
+            #                          check=True , 
+            #                          capture_output=True , 
+            #                          text = True)
 
             print("Selphy Print Sent Successful")
+            #[UPDATE STATUS OF PRINTER]
+            status_logger.update_status("printer" , "printing")
 
             print("Printing in Progress - Wait....")
+
             time.sleep(SELPHY_PRINT_COOLDOWN)
+
+            #flip printed key in visitor state to true
+
+            visitor["printed"] = True
+
+            #[UPDATE STATUS OF PRINTER]
+            status_logger.update_status("printer" , "ready")
+            
             #subprocess.run(["cancel", "-a", SELPHY_PRINTER_NAME], check=False)
-            print("Selphy Print Job Completed")    
+            print("Selphy Print Job Completed")  
+
         except Exception as e:
+            visitor["printed"] = False
+            #[UPDATE STATUS OF PRINTER]
+            status_logger.update_status("printer" , "eror")
+            status_logger.log_error("Selphy" , str(e))
             print(f"Selphy print failed: {e}")
+            
 
