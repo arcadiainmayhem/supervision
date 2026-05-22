@@ -9,7 +9,7 @@ def corrupt(filepath):
 
     image = Image.open(filepath)
     
-    effects = [_chromatic_abberation, _glitch_shift, _ghost_print ,_pixel_band_sort, _scanlines, _vignette]
+    effects = [_chromatic_abberation, _glitch_shift, _ghost_print ,_pixel_band_sort, _scanlines,_invert_bands , _noise , _block_corrupt]
     #shuffle order
     random.shuffle(effects)
 
@@ -164,3 +164,59 @@ def _glitch_shift(image):
         
         
         return Image.fromarray(img_array)
+    
+
+
+def _noise(image):
+    img_array = np.array(image).astype(np.int16)
+
+
+    noise = np.random.randint(-NOISE_INTENSITY , NOISE_INTENSITY , img_array.shape)
+    result = np.clip(img_array + noise , 0 ,255)
+
+    return Image.fromarray(result.astype(np.uint8))
+
+
+def _block_corrupt(image):
+    img_array = np.array(image)
+    height , width = img_array.shape[:2]
+
+
+    num_blocks = random.randint(BLOCK_CORRUPT_MIN , BLOCK_CORRUPT_MAX)
+
+
+    for _ in range(num_blocks):
+        x = random.randint(0 , width - BLOCK_SIZE_MAX)
+        y = random.randint(0 , height - BLOCK_SIZE_MAX)
+        w = random.randint(BLOCK_SIZE_MIN , BLOCK_CORRUPT_MAX)
+        h = random.randint(BLOCK_SIZE_MIN , BLOCK_SIZE_MAX)
+
+
+        mode = random.choice(["invert" , "solid" , "shift"])
+
+
+        if mode == "invert":
+            img_array[y:y+h , x:x+w] = 255 - img_array[y:y+h , x:x+w]
+        elif mode == "solid":
+            color = [random.randint(0,255) for _ in range(3)]
+            img_array[y:y+h , x : x+w] = color
+        elif mode == "shift":
+            img_array[y:y+h, x:x+w] = np.roll(img_array[y:y+h, x:x+w], random.randint(10, 50), axis=1)
+
+    return Image.fromarray(img_array)
+
+
+def _invert_bands(image):
+    img_array = np.array(image)
+    height = img_array.shape[0]
+    
+    num_bands = random.randint(INVERT_BANDS_MIN, INVERT_BANDS_MAX)
+    
+    for _ in range(num_bands):
+        y_start = random.randint(0, height - INVERT_BAND_HEIGHT_MAX)
+        band_height = random.randint(INVERT_BAND_HEIGHT_MIN, INVERT_BAND_HEIGHT_MAX)
+        y_end = min(y_start + band_height, height)
+        
+        img_array[y_start:y_end] = 255 - img_array[y_start:y_end]
+    
+    return Image.fromarray(img_array)
