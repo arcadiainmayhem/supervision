@@ -147,7 +147,7 @@ def _glitch_shift(image):
 
     height = img_array.shape[0]
 
-    num_bands= random.randint(GLITCH_SHIFT_BANDS_MIN , GLITCH_SHIFT_AMOUNT_MAX)
+    num_bands= random.randint(GLITCH_SHIFT_BANDS_MIN , GLITCH_SHIFT_BANDS_MAX)
 
 
     for _ in range(num_bands):
@@ -163,7 +163,7 @@ def _glitch_shift(image):
         img_array[y_start:y_end] = np.roll(img_array[y_start:y_end] , shift*direction, axis  =1)
         
         
-        return Image.fromarray(img_array)
+    return Image.fromarray(img_array)
     
 
 
