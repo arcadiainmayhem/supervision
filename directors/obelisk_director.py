@@ -228,8 +228,9 @@ class ObeliskDirector():
         if DEV_MODE:
             img = Image.open(visitor["output_path"])
             img.show()
+            return True
         else:
-            self._print_selphy_card(visitor)
+            return self._print_selphy_card(visitor)
 
 
     def _print_selphy_card(self, visitor):
@@ -240,7 +241,7 @@ class ObeliskDirector():
 
             if SKIP_PRINT:
                 print(f"[OBELISKDIRECTOR] SKIP_PRINT enabled — skipping: {filepath}")
-            return
+                return True
 
             print(f"[TEST] Would print: {filepath}")
             
@@ -254,16 +255,23 @@ class ObeliskDirector():
             time.sleep(2)
 
             #check printer status via CUPS - generates readable lines
-            check = subprocess,run(["lp" , 
+            check = subprocess.run(["lpstat" , 
                                     "-p" ,
                                     SELPHY_PRINTER_NAME,],
                                     capture_output = True,
                                     text = True)
 
-            print(f"[SELPHYPRINTER] Status : {check.stdout}")
-            status_logger.log_error("Selphy" , check.stdout.strip())
+            printer_status = check.stdout.strip()
+            print(f"[SELPHYPRINTER] Printer Status : {printer_status}")
+   
+            #quits queue if printerstatus fails
+            if "error" in printer_status.lower() or "disabled" in printer_status.lower():
+                status_logger.update_status("printer" , "error")
+                status_logger.log_error("Selphy" ,printer_status)
+                visitor["printed"] = False
+                return False
 
-            #send to printer to print
+            #send to printer to print if status is okay
             # result = subprocess.run(["lp" , "-d", 
             #                          SELPHY_PRINTER_NAME , 
             #                          filepath] , 
@@ -289,11 +297,14 @@ class ObeliskDirector():
             #subprocess.run(["cancel", "-a", SELPHY_PRINTER_NAME], check=False)
             print("Selphy Print Job Completed")  
 
+            return True
+            
         except Exception as e:
             visitor["printed"] = False
             #[UPDATE STATUS OF PRINTER]
             status_logger.update_status("printer" , "eror")
             status_logger.log_error("Selphy" , str(e))
             print(f"Selphy print failed: {e}")
-            
+
+            return False
 

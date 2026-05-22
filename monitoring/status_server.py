@@ -6,7 +6,9 @@ import time
 
 
 #creates a Flask application 
-app = Flask(__name__)
+app = Flask(__name__,
+            template_folder="templates",
+            static_folder="static")
 
 
 @app.route("/")
@@ -14,7 +16,7 @@ def status_page():
     return render_template("monitoring_status.html",
         status = status_logger.current_status,
         encounters = list(reversed(status_logger.encounter_log)),
-        error = list(reversed(status_logger.error_log))
+        errors = list(reversed(status_logger.error_log))
         )
 
 

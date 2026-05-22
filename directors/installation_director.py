@@ -132,10 +132,17 @@ class InstallationDirector :
             self.obelisk_director.select_elements(self.current_visitor)
    
             #select printer
-            self._route_output(self.current_visitor)
+            success = self._route_output(self.current_visitor)
+
+            #[EARLY RETURN IF NOT SUCCESS]
+            if not success:
+                print(f"[INSTALLATIONDIRECTOR] Print failed — resetting debounce for retry ")
+                self.last_trigger_time = 0 #allows immediate retry
+                status_logger.update_status("state" , "error")
+
             #[UPDATE SERVER STATUS]
             status_logger.log_encounter(self.current_visitor)
-            status_logger.update_status("state" , "prirnting")     
+            status_logger.update_status("state" , "printing")     
             #[COMPLETED TRIGGERED]
             self.led_manager.set_state(LEDState.COMPLETED)
             print('Route Output Done')
@@ -201,10 +208,11 @@ class InstallationDirector :
                 except Exception as e:
                     print(f"[INSTALLTIONDIRECTOR] Gacha Corruption Failed : {e} - printing normal card")
 
-
-
             #print after saving from path
-            self.obelisk_director.prepare_selphy_card_print(visitor)
+
+            sucess = self.obelisk_director.prepare_selphy_card_print(visitor)
+
+            return sucess
 
 
 
