@@ -137,7 +137,7 @@ def _ghost_print(image):
     ghost2 = np.roll(img_array , offset_y , axis = 0) #shift up
 
     #blend all three 
-    result = (img_array * 0.6 + ghost1 * 0.3 + ghost2 * 0.2)
+    result = (img_array * GHOST_PRINT_ORIGINAL_WEIGHT + ghost1 * GHOST_PRINT_GHOST_WEIGHT + ghost2 * GHOST_PRINT_GHOST_WEIGHT)
     result = np.clip(result , 0 , 255)
 
     return Image.fromarray(result.astype(np.uint8))
