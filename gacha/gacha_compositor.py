@@ -177,34 +177,31 @@ def _noise(image):
     return Image.fromarray(result.astype(np.uint8))
 
 
+
+
 def _block_corrupt(image):
     img_array = np.array(image)
-    height , width = img_array.shape[:2]
-
-
-    num_blocks = random.randint(BLOCK_CORRUPT_MIN , BLOCK_CORRUPT_MAX)
-
-
+    height, width = img_array.shape[:2]
+    
+    num_blocks = random.randint(BLOCK_CORRUPT_MIN, BLOCK_CORRUPT_MAX)
+    
     for _ in range(num_blocks):
-        x = random.randint(0 , width - BLOCK_SIZE_MAX)
-        y = random.randint(0 , height - BLOCK_SIZE_MAX)
-        w = random.randint(BLOCK_SIZE_MIN , BLOCK_CORRUPT_MAX)
-        h = random.randint(BLOCK_SIZE_MIN , BLOCK_SIZE_MAX)
-
-
-        mode = random.choice(["invert" , "solid" , "shift"])
-
-
+        x = random.randint(0, width - BLOCK_SIZE_MAX)
+        y = random.randint(0, height - BLOCK_SIZE_MAX)
+        w = random.randint(BLOCK_SIZE_MIN, BLOCK_SIZE_MAX)
+        h = random.randint(BLOCK_SIZE_MIN, BLOCK_SIZE_MAX)
+        
+        mode = random.choice(["invert", "solid", "shift"])
+        
         if mode == "invert":
-            img_array[y:y+h , x:x+w] = 255 - img_array[y:y+h , x:x+w]
+            img_array[y:y+h, x:x+w] = 255 - img_array[y:y+h, x:x+w]
         elif mode == "solid":
-            color = [random.randint(0,255) for _ in range(3)]
-            img_array[y:y+h , x : x+w] = color
+            color = [random.randint(0, 255) for _ in range(3)]
+            img_array[y:y+h, x:x+w] = color
         elif mode == "shift":
             img_array[y:y+h, x:x+w] = np.roll(img_array[y:y+h, x:x+w], random.randint(10, 50), axis=1)
-
+    
     return Image.fromarray(img_array)
-
 
 def _invert_bands(image):
     img_array = np.array(image)
