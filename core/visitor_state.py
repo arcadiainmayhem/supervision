@@ -14,6 +14,10 @@ def create_visitor_state(visitor_number):
     #Observation
     "camera_frame" : None,
     "detected_results" : None,
+    #Passive Observation 
+
+    "stillness_variable" : 999.0,
+    "dwell_count" : 0,  
     
     "color_saturation": 0,
     "color_hue": 0,
@@ -44,6 +48,7 @@ def create_visitor_state(visitor_number):
     "datestamp" : now,
     "start_time" : now,
     "end_time" : None,
+
 
     #decider - output
     "satisfaction_score": None,

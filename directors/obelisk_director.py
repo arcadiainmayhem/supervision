@@ -29,7 +29,6 @@ from monitoring import status_logger
 
 #Accumulate
 
-
 #Points / Produces output
 
 class ObeliskDirector():
@@ -43,18 +42,30 @@ class ObeliskDirector():
         self.isPrinting = False
         #camera availability
         self.camera_available = True
+        self.lastest_frame = None
+        self._frame_lock = threading.Lock()
 
-        #threadings
+        #passive metrics 
+        self._prev_frame = None
+        self.stillness_variable = 999.0
+        self.dwell_count = 0
+        self._variance_history = []
+        self._variance_window = 10
+
+        self._stream_thread = threading.Thread(target= self._stream_loop , daemon=True)
+        self._stream_thread.start()
+        #threadings 
 
         #start health check
         self.health_check_thread = threading.Thread(target= self._camera_health_check_loop)
         self.health_check_thread.daemon = True
         self.health_check_thread.start()
 
-
+        
 
         #current running data
         self.current_observation = None
+     
 
         #initilaise mediapose objects
         self.body_detector = setup_body_object()
@@ -62,8 +73,65 @@ class ObeliskDirector():
         self.hand_detector = setup_hand_object()
         self.gesture_recognizer = setup_gesture_object()
 
+    def _stream_loop(self):
+        while True: #runs forever
+            try:
+                url = f"http://{CAMERA_PI_IP}:{CAMERA_PI_PORT}/stream"
 
-        
+                print(f"[OBELISKDIRECTOR][STREAM] Attempting Connection to {url}")
+
+                response = requests.get(url , stream= True , timeout = 10) #opens one connection to stream
+                print("[OBELISKDIRECTOR][STREAM] Stream Connected Successfully")
+                #[UPDATE STATUS]
+                status_logger.update_status("camera" , "online")
+                self.camera_available = True
+
+                for frame in self._iter_mjpeg(response): #each iteration 
+                    with self._frame_lock: #when it has the lock , locks the room
+                        self.lastest_frame = frame #update latest frame
+                        self._update_passive_metrics(frame) #update passive metrics
+                #room unlocks automatically
+            except Exception as e:
+                if self.camera_available:
+                    print(f"[OBELISKDIRECTOR][STREAM] Stream Lost: {e}")
+                    status_logger.update_status("camera","unreachable")
+                self.camera_available = False
+                print(f"[OBELISKDIRECTOR][STREAM] Stream Attempting Reconnection in  {CAMERA_HEALTH_CHECK_INTERVAL}")
+
+                time.sleep(CAMERA_STREAM_RECONNECTION_INTERVAL) # wait then reconnect
+
+
+    def _iter_mjpeg(self , response):
+        #Parse MJPEG multipart stream, yield decoded frames as numpy arrays.
+        buffer = bytes()
+        for chunk in response.iter_content(chunk_size=4096):
+            buffer += chunk
+            start = buffer.find(b'\xff\xd8')  # JPEG start
+            end = buffer.find(b'\xff\xd9')    # JPEG end
+            if start != -1 and end != -1:
+                jpg = buffer[start:end+2]
+                buffer = buffer[end+2:]
+                arr = np.frombuffer(jpg, dtype=np.uint8)
+                frame = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+                if frame is not None:
+                    yield frame
+
+    def _update_passive_metrics(self,frame):
+        #called from inside lock
+        self.dwell_count += 1
+
+        if self._prev_frame is not None:
+            diff = cv2.absdiff(frame , self._prev_frame)
+            variance = float(np.mean(diff))
+
+            self._variance_history.append(variance)
+            if len(self._variance_history) > self._variance_window:
+                self._variance_history.pop(0)
+
+            self.stillness_variable = sum(self._variance_history) / len(self._variance_history)
+
+        self._prev_frame = frame
+
     def _camera_health_check_loop(self):
         while True:
             try:
@@ -92,67 +160,87 @@ class ObeliskDirector():
 
 
 
-    def _capture(self):
+    # def _capture(self):
+
+    #     if DEV_MODE:
+    #         return load_image(FALLBACK_IMAGE_PATH)
+        
+    #     try:
+    #         response = requests.get(f"http://{CAMERA_PI_IP}:{CAMERA_PI_PORT}/frame", timeout = 5)
+    #         if response.status_code == 200:
+    #             jpg_bytes = np.frombuffer(response.content , dtype=np.uint8)
+    #             return cv2.imdecode(jpg_bytes,cv2.IMREAD_COLOR)
+    #         else:
+    #             print(f"[OBELISKDIRECTOR] Camera Pi Returned { response.status_code} - using fallback")
+    #             return load_image(FALLBACK_IMAGE_PATH)
+
+
+    #     except Exception as e:
+    #         print(f"Camera Pi request failed: {e} — using fallback")
+    #         return load_image(FALLBACK_IMAGE_PATH)
+        
+ 
+
+    # def observe(self,visitor):
+        
+    #     frame = self._capture()
+
+    #     if frame is None:
+    #         print("'OBELISKDIRECTOR No Frame - using Fallback")
+    #         frame = load_image(FALLBACK_IMAGE_PATH)
+
+    #     #writes to visitor dictionary
+    #     self.run_pipeline(frame, visitor)
+
+    #     if SHOW_DETECTIONS:
+    #         annotated = draw_detections(visitor["camera_frame"] , visitor["detected_results"])
+    #         cv2.imshow("Detection Preview", annotated)
+    #         cv2.waitKey(1)
+
+    def capture(self):
 
         if DEV_MODE:
             return load_image(FALLBACK_IMAGE_PATH)
         
-        try:
-            response = requests.get(f"http://{CAMERA_PI_IP}:{CAMERA_PI_PORT}/frame", timeout = 5)
-            if response.status_code == 200:
-                jpg_bytes = np.frombuffer(response.content , dtype=np.uint8)
-                return cv2.imdecode(jpg_bytes,cv2.IMREAD_COLOR)
-            else:
-                print(f"[OBELISKDIRECTOR] Camera Pi Returned { response.status_code} - using fallback")
-                return load_image(FALLBACK_IMAGE_PATH)
+        with self._frame_lock:
+            frame = self.lastest_frame
 
-
-        except Exception as e:
-            print(f"Camera Pi request failed: {e} — using fallback")
-            return load_image(FALLBACK_IMAGE_PATH)
-        
-    def read_frame(self):
-        #read frames for passive sampling
-        pass
-
-    # def passive_continuous_observation(self):
-    #     while self.isWatching:
-    #         #TODO: TREADING
-    #             with self.frame_lock: #acquire lock
-    #                 frame = self.camera.preview_frame()
-    #             time.sleep(0.03)
-                
-    #             # if frame is not None:
-    #             #     #print("Camera is Observing")
-    #             #     if SHOW_PREVIEW:
-    #             #         cv2.imshow("Camera Preview", frame)
-    #             #         cv2.waitKey(1)
-    #             # else:
-    #             #     print("[OBELISKDIRECTOR - PREVIEW] Frame is None")
-
-    #             if frame is None:
-    #                 print("[OBELISKDIRECTOR - PREVIEW] Frame is None")
-
-
-    #             #timing issue
-    #             time.sleep(0.03)
-
-    def observe(self,visitor):
-        frame = self._capture()
 
         if frame is None:
-            print("'OBELISKDIRECTOR No Frame - using Fallback")
-            frame = load_image(FALLBACK_IMAGE_PATH)
+            print("[OBELISKDIRECTOR] No frame yet - using fallback")
+            return load_image(FALLBACK_IMAGE_PATH)
+        
+        return frame
 
-        #writes to visitor dictionary
-        self.run_pipeline(frame, visitor)
+    def observe(self,visitor):
+        print(f"[OBELISKDIRECTOR][OBSERVE] Triggered for visitor {visitor['visitor_number']}")
+        try:
+            with self._frame_lock: #locks the room
+                frame = self.lastest_frame #copy whatever is there
+                visitor["dwell_count"] = self.dwell_count
+                visitor["stillness_variable"] = self.stillness_variable
+                self.dwell_count = 0 #reset for next visitor
+            print(f"[OBELISKDIRECTOR][OBSERVE] dwell_count : {visitor['dwell_count']} | stillness : {visitor['stillness_variable']:.2f}")
 
-        if SHOW_DETECTIONS:
-            annotated = draw_detections(visitor["camera_frame"] , visitor["detected_results"])
-            cv2.imshow("Detection Preview", annotated)
-            cv2.waitKey(1)
+            if frame is None:
+                print(f"[OBELISKDIRECTOR][OBSERVE] No frame available, using Fallback")
+                frame = load_image(FALLBACK_IMAGE_PATH)
+            else:
+                print(f"[OBELISKDIRECTOR][OBSERVE] Frame grabbed - Shape : {frame.shape}")
 
+            #outside of the lock - stream thread can write again
+            self.run_pipeline(frame , visitor)
 
+            if SHOW_DETECTIONS:
+                annotated = draw_detections(visitor["camera_frame"],visitor["detected_results"] )
+                cv2.imshow("Detection Preview",annotated)
+                cv2.waitKey(1)
+
+        except Exception as e:
+            print(f"[OBELISKDIRECTOR][OBSERVE] Failed: {e}")
+            visitor["camera_frame"] = None
+            visitor["dwell_count"] = 0
+            visitor["stillness_variable"] = 999.0
 
     def pause_observe(self, visitor):
         pass

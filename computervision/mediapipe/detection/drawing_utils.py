@@ -1,25 +1,28 @@
 import cv2
 import numpy as np
 import mediapipe as mp
-from mediapipe import solutions
 import platform
 
 
 if platform.system() == "Linux":
+    from mediapipe import solutions
     from mediapipe.framework.formats import landmark_pb2
 
 
 
 def draw_detections(frame , detected_results):
 
-
+    if platform.system() != "Linux":
+        print("[MEDIAPIPEDETECTION] Skipping annotations - Not On Pi")
+        return np.copy(frame)
+    
     annotated = np.copy(frame)
-
-
 
     _draw_body(annotated , detected_results["body"])
     _draw_face(annotated , detected_results["face"])
     _draw_hands(annotated , detected_results["hand"])
+
+    print(f"[MEDIAPIPEDETECTION] Frame annotations : {annotated}")
 
     return annotated
 
@@ -28,7 +31,6 @@ def _draw_body(frame , body_result):
     if not body_result.pose_landmarks:
         return
     
-
     for pose_landmarks in body_result.pose_landmarks:
         #convert Tasks Landmarks to protobuf format for drawing_utils
         landmark_list = landmark_pb2.NormalizedLandmarkList()

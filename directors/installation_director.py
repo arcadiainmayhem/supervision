@@ -3,7 +3,7 @@ import signal
 import traceback
 import time
 
-from .obelisk_director import ObeliskDirector
+from directors.obelisk_director import ObeliskDirector
 
 from core.visitor_state import create_visitor_state
 from core.decider.installation_decider import decide
@@ -42,7 +42,7 @@ class InstallationDirector :
         #printer related
         self.is_printing = False
         self.last_trigger_time = 0
-        
+
         #visitor related
         self.current_visitor = None
         self.current_visitor_score = None
@@ -72,8 +72,6 @@ class InstallationDirector :
         #setup button listener + initialise
         register_trigger_button(self._run_encounter)
 
-        #signal to printer that its ready
-
         #signal to microphone 
 
     def create_visitor(self):
@@ -96,8 +94,6 @@ class InstallationDirector :
         if now - self.last_trigger_time < TRIGGER_DEBOUNCE_SECONDS:
             print("Too Soon - Trigger Ignored")
             return
-
-
 
         #check button press / trigger -> gets observation visitor dict from obelisk
         #create visitor + guard against running twice
