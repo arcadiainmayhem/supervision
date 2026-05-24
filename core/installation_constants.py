@@ -21,7 +21,7 @@ SELPHY_OUTPUTS_DIR = "outputs/selphy"
 THERMAL_OUTPUTS_DIR = "outputs/thermal"
 
 #FALLBACK DIRECTORY
-FALLBACK_IMAGE_PATH = "test/fallback/fallback_3.png"
+FALLBACK_IMAGE_PATH = "test/fallback/fallback_6.jpg"
 
 #INSTALLATION NAMES
 SELPHY_PRINTER_NAME = "Selphy"

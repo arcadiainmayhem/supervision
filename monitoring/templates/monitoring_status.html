@@ -50,6 +50,15 @@
     <p>None</p>
     {% endif %}
 
+    <h2>Print Queue</h2>
+    <p id="queue-count"> {{queue | length }} job(s) in queue </p>
+    {% for job in queue}
+    <p class="error">{{job}}</p>
+    {% endfor %}
+    <form method="POST" action="/cancel-jobs">
+        <button type="submit">Cancel All Print Jobs</button>
+    </form>
+
 </body>
 
 </html>

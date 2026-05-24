@@ -1,9 +1,9 @@
-from flask import Flask , render_template
+from flask import Flask , render_template , redirect
 from monitoring import status_logger
 import threading
 from core.installation_constants import *
 import time
-
+import subprocess
 
 #creates a Flask application 
 app = Flask(__name__,
@@ -16,9 +16,22 @@ def status_page():
     return render_template("monitoring_status.html",
         status = status_logger.current_status,
         encounters = list(reversed(status_logger.encounter_log)),
-        errors = list(reversed(status_logger.error_log))
+        errors = list(reversed(status_logger.error_log)),
+        queue = status_logger.get_print_queue()
         )
 
+@app.route("/queue")
+def queue():
+    jobs = status_logger.get_print_queue()
+    return {"jobs" : jobs}
+
+@app.route("/cancel-jobs", methods=["POST"])
+def cancel_jobs():
+    subprocess.run(["cancel",
+                   "-a",
+                   SELPHY_PRINTER_NAME],
+                   check = True)
+    return redirect("/")
 
 def _color(value):
     if value in ("ready" , "online" , "ok"):
@@ -28,7 +41,6 @@ def _color(value):
     else:
         return "error"
     
-
 def _encounter_row(e):
     printed = "✓" if e["printed"] else "✗"
     return f'<tr><td>{e["visitor_number"]}</td></td> {e["timestamp"]}</td></td> {e["rarity"]}</td></td>{e["score"]}</td></td>{"printed"}</td></tr>'

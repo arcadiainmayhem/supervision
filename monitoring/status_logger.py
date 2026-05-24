@@ -1,5 +1,6 @@
 
 from datetime import datetime
+import subprocess
 
 encounter_log = [] #encounter history
 error_log = [] #errors only
@@ -42,3 +43,13 @@ def log_error(source,message):
 
 def update_status(key , value):
     current_status[key] = value
+
+
+
+def get_print_queue():
+    result =subprocess.run("lpstat",
+                   "-o",
+                   capture_output=True,
+                   text= True)
+    lines = [l.strip() for l in result.stdout().splitlines() if l.strip()]
+    return lines #empty list , nothing queued

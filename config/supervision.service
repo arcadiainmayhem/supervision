@@ -1,0 +1,14 @@
+[Unit]
+Description = Prima Materia Supervision Installation
+After = network.target
+
+[Service]
+WorkingDirectory=/home/arcadia/supervision
+ExecStart=/home/arcadai/supervision/venv/bin/python3 main.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
