@@ -45,8 +45,8 @@ class GachaManager():
 
     
         #for testing
-        #return True
-        return False
+        return True
+        #return False
 
     def _check_date_reset(self):
         today = datetime.now().date()
