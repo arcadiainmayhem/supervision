@@ -158,45 +158,6 @@ class ObeliskDirector():
             
             time.sleep(CAMERA_HEALTH_CHECK_INTERVAL)
 
-
-
-    # def _capture(self):
-
-    #     if DEV_MODE:
-    #         return load_image(FALLBACK_IMAGE_PATH)
-        
-    #     try:
-    #         response = requests.get(f"http://{CAMERA_PI_IP}:{CAMERA_PI_PORT}/frame", timeout = 5)
-    #         if response.status_code == 200:
-    #             jpg_bytes = np.frombuffer(response.content , dtype=np.uint8)
-    #             return cv2.imdecode(jpg_bytes,cv2.IMREAD_COLOR)
-    #         else:
-    #             print(f"[OBELISKDIRECTOR] Camera Pi Returned { response.status_code} - using fallback")
-    #             return load_image(FALLBACK_IMAGE_PATH)
-
-
-    #     except Exception as e:
-    #         print(f"Camera Pi request failed: {e} — using fallback")
-    #         return load_image(FALLBACK_IMAGE_PATH)
-        
- 
-
-    # def observe(self,visitor):
-        
-    #     frame = self._capture()
-
-    #     if frame is None:
-    #         print("'OBELISKDIRECTOR No Frame - using Fallback")
-    #         frame = load_image(FALLBACK_IMAGE_PATH)
-
-    #     #writes to visitor dictionary
-    #     self.run_pipeline(frame, visitor)
-
-    #     if SHOW_DETECTIONS:
-    #         annotated = draw_detections(visitor["camera_frame"] , visitor["detected_results"])
-    #         cv2.imshow("Detection Preview", annotated)
-    #         cv2.waitKey(1)
-
     def capture(self):
 
         if DEV_MODE:
@@ -360,12 +321,12 @@ class ObeliskDirector():
                 return False
 
             #send to printer to print if status is okay
-            # result = subprocess.run(["lp" , "-d", 
-            #                          SELPHY_PRINTER_NAME , 
-            #                          filepath] , 
-            #                          check=True , 
-            #                          capture_output=True , 
-            #                          text = True)
+            subprocess.run(["lp" , "-d", 
+                                     SELPHY_PRINTER_NAME , 
+                                     filepath] , 
+                                     check=True , 
+                                     capture_output=True , 
+                                     text = True)
 
             print("Selphy Print Sent Successful")
             #[UPDATE STATUS OF PRINTER]
