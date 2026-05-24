@@ -2,6 +2,7 @@ import os
 import signal
 import traceback
 import time
+import threading
 
 from directors.obelisk_director import ObeliskDirector
 
@@ -233,6 +234,19 @@ class InstallationDirector :
         #shutdown os
         os.system("sudo shutdown now")
 
+    def _auto_trigger_loop(self):
+        for i in range(STRESS_TEST_MAX_TRIGGERS):
+            print(f"[INSTALLATIONDIRECTOR][STRESSTEST] Auto trigger {i+1} of {STRESS_TEST_MAX_TRIGGERS}")
+            self._run_encounter()
+            time.sleep(STRESS_TEST_INTERVALS)
+
+    def start_stress_test(self):
+        thread = threading.Thread(
+            target = self._auto_trigger_loop,
+            args=(STRESS_TEST_INTERVALS , STRESS_TEST_MAX_TRIGGERS)
+        )
+        thread.daemon = True
+        thread.start()
 
     #debuggin
     def exit_program(self):

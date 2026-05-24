@@ -4,6 +4,7 @@ import os
 
 #REGION BOUNDARIES
 DEV_MODE = platform.system() != "Linux" 
+STRESS_TEST = False
 
 #STATUS SERVER
 STATUS_SERVER_PORT = 8080
