@@ -12,41 +12,68 @@ class GachaManager():
         self.has_fired_today = False
         self.last_fire_date = None
 
+        self.daily_fire_count = None    
 
 
+    def check_gacha(self,visitor):
 
 
-    def check_gacha(self, visitor):
-
-
-        #if already fired, automatic false
-        if self.has_fired_today:
-            return False
-        #check current day
-        self._check_date_reset()
-
+        if self.daily_fire_count >= MAX_GACHA_WINNERS:
+            return
+        
         #check current hour
         current_hour = datetime.now().hour
         #check window
         window = self._check_time_window()
-        #check probabilty
-        probability = self._get_hit_probability(window , current_hour)
+        #check hit probabilty
+        probabilty = self._get_hit_probability(window , current_hour)
 
         print(f"[GACHAMANAGER] Window : {window} | Hours : {current_hour }")
               
         roll = random.random()
         print(f"[GACHAMANAGER] Roll : {roll:.2f}")
 
-        if roll < probability:
-            self.has_fired_today = True
-            self.last_fire_date = datetime.now().date()
+        if roll < probabilty:
+            self.daily_fire_count += 1
             print(f"[GACHAMANAGER] Gacha Triggered")
-            return True
+            return True            
+            
+        return False
+
+    # def check_gacha(self, visitor):
+    #     #if its over MAX count , return
+    #     if self.daily_fire_count >= MAX_GACHA_WINNERS:
+    #         return
+        
+    #     #if already fired, automatic false
+    #     if self.has_fired_today:
+    #         return False
+            
+    #     #check current day
+    #     self._check_date_reset()
+
+    #     #check current hour
+    #     current_hour = datetime.now().hour
+    #     #check window
+    #     window = self._check_time_window()
+    #     #check probabilty
+    #     probability = self._get_hit_probability(window , current_hour)
+
+    #     print(f"[GACHAMANAGER] Window : {window} | Hours : {current_hour }")
+              
+    #     roll = random.random()
+    #     print(f"[GACHAMANAGER] Roll : {roll:.2f}")
+
+    #     if roll < probability:
+    #         self.has_fired_today = True
+    #         self.last_fire_date = datetime.now().date()
+    #         print(f"[GACHAMANAGER] Gacha Triggered")
+    #         return True
 
     
-        #for testing
-        #return True
-        return False
+    #     #for testing
+    #     return True
+    #     #return False
 
     def _check_date_reset(self):
         today = datetime.now().date()

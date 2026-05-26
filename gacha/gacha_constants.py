@@ -2,7 +2,7 @@
 
 
 
-
+MAX_GACHA_WINNERS = 5
 
 GACHA_WINDOW_START = 10 # hour
 GACHA_WINDOW_END = 19 # hour

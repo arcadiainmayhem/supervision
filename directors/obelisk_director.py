@@ -203,8 +203,6 @@ class ObeliskDirector():
             visitor["dwell_count"] = 0
             visitor["stillness_variable"] = 999.0
 
-    def pause_observe(self, visitor):
-        pass
         
 
 

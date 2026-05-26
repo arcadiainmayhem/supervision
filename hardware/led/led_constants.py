@@ -10,6 +10,7 @@ STATE_COLORS = {
     "error":      (255, 0, 0),    # red
     "bored":      (128, 0, 128),  # purple
     "proud":      (255, 100, 0),  # orange
+    "gacha" :  (255,160,0), #golden yellow?
     "satan" : None #animated - handled by manager , white yellow red
 }
 

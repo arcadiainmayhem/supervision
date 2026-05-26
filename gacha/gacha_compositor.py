@@ -4,6 +4,24 @@ import numpy as np
 from PIL import Image , ImageDraw , ImageChops
 import random
 from gacha.gacha_constants import *
+import os
+
+GOLDEN_ASSETS_DIR = "test/golden"
+
+
+def get_golden():
+    try :
+        index = random.randint(1 ,5)
+        filename=f"goldenspecial_{index}.pg"
+        golden_path = os.path.join(GOLDEN_ASSETS_DIR,filename)
+
+        if not os.path.exists(golden_path):
+            return FileNotFoundError(f"[GACHACOMPOSITOR] Golden Asset Not Found: {golden_path}")
+        return golden_path
+    
+    except Exception as e :
+        print(f"[GACHACOMPOSITOR] Golden asset Error {e}")
+        return None
 
 def corrupt(filepath):
 
@@ -12,6 +30,7 @@ def corrupt(filepath):
     effects = [_chromatic_abberation, _glitch_shift, _ghost_print ,_pixel_band_sort, _scanlines,_invert_bands , _noise , _block_corrupt]
     #shuffle order
     random.shuffle(effects)
+  
 
     #select up to 2 effects
     count = random.randint(2 , len(effects))
@@ -29,6 +48,7 @@ def corrupt(filepath):
 
 
     return corrupted_path
+
 
 
 def _chromatic_abberation(image):

@@ -19,7 +19,7 @@ from hardware.led.led_manager import LEDManager
 from hardware.led.led_states import LEDState
 
 from gacha.gacha_manager import GachaManager
-from gacha.gacha_compositor import corrupt
+from gacha.gacha_compositor import get_golden
 
 from monitoring.status_server import start_in_thread
 from monitoring import status_logger
@@ -200,17 +200,22 @@ class InstallationDirector :
 
             if self.gacha_manager.check_gacha(visitor):
                 try:
-                    corrupted_path = corrupt(visitor["output_path"])
-                    print("[INSTALLATIONDIRECTOR] Corrupting Image")
-                    visitor["output_path"] = corrupted_path
+                    #gets Golden Gacha Output Path
+                    golden_path = get_golden()
+                    if golden_path: #incase theres an error
+                        self.led_manager.set_state(LEDState.GACHA)
+
+                        print("[INSTALLATIONDIRECTOR] Corrupting Image ~ Getting Golden")
+                        #overrides
+                        visitor["output_path"] = golden_path
                 except Exception as e:
                     print(f"[INSTALLTIONDIRECTOR] Gacha Corruption Failed : {e} - printing normal card")
 
             #print after saving from path
 
-            sucess = self.obelisk_director.prepare_selphy_card_print(visitor)
+            success = self.obelisk_director.prepare_selphy_card_print(visitor)
 
-            return sucess
+            return success
 
 
 

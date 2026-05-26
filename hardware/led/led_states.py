@@ -9,4 +9,5 @@ class LEDState(Enum):
     ERROR = "error"
     BORED = "bored"
     PROUD = "proud"
+    GACHA = "gacha"
     SATAN = "666"
