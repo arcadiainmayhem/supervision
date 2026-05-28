@@ -20,7 +20,8 @@ def decide(visitor):
         visitor["rarity_tier"] = "uncommon"
     else:
         visitor["rarity_tier"] = "common"
-
+ 
+    print(f"[DECIDER] presence={visitor['presence_score']} expression={visitor['expression_score']} context={visitor['context_score']} time={visitor['time_score']}")
     # # output type
     # if final_score >= OUTPUT_SELPHY_THRESHOLD:
     #     visitor["output_type"] = "selphy"

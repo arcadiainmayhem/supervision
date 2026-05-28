@@ -160,7 +160,7 @@ class InstallationDirector :
 
             print(f"Encounter Failed: {e}")
             #[UPDATE SERVER STATUS]
-            status_logger.log_encounter("Installation Director", str(e))
+            status_logger.log_encounter(f"Installation Director: {str(e)}")
             status_logger.update_status("state" , "error")
 
             #prints full error with exact file

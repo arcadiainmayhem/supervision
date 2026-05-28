@@ -87,6 +87,13 @@ class LEDManager():
                 while not self.stop_animation:
                     self._pulse(color)
                     time.sleep(SLEEP_TIME)
+
+            case LEDState.GACHA:
+                color = STATE_COLORS["gacha"]
+                for _ in range(3):
+                    if self.stop_animation:
+                        return
+                    self._pulse(color)
                     
             case LEDState.SATAN:
                 # fire cycle
@@ -142,8 +149,6 @@ class LEDManager():
             time.sleep(0.1)
             self._set_all(0 , 0 , 0 )
             time.sleep(0.1)
-
-
 
 
 

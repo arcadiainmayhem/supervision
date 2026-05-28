@@ -50,4 +50,11 @@ echo "core_freq=500" | sudo tee -a /boot/firmware/config.txt
 # Manual step: run 'sudo visudo' and add:
 # arcadia ALL=(ALL) NOPASSWD: /usr/sbin/cupsdisable, /usr/sbin/cupsenable
 
+# Static IP on eth0 for direct connection to camera Pi
+sudo nmcli con add type ethernet ifname eth0 con-name eth0-static \
+  ipv4.addresses 192.168.2.1/24 \
+  ipv4.method manual
+
+sudo nmcli con up eth0-static
+
 echo "Done! Run 'source venv/bin/activate' then 'python3 main.py'"
