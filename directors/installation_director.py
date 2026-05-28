@@ -160,9 +160,9 @@ class InstallationDirector :
 
             print(f"Encounter Failed: {e}")
             #[UPDATE SERVER STATUS]
-            status_logger.log_encounter(f"Installation Director: {str(e)}")
+            status_logger.log_error(f"Installation Director: " ,str(e)) 
             status_logger.update_status("state" , "error")
-
+ 
             #prints full error with exact file
             traceback.print_exc()
 
@@ -180,9 +180,10 @@ class InstallationDirector :
     def _evaluate_visitor_profile(self, visitor):
         #brain + determines if its selphy , or thermal
         decide(visitor)
-        print("Score:", visitor["satisfaction_score"])
+        print("Satisfaction Score:", visitor["satisfaction_score"])
         print("Rarity:", visitor["rarity_tier"])
         print("Output:", visitor["output_type"])
+
     
     def _add_to_visitor_history(self,visitor):
         self.encounter_history.append(visitor)

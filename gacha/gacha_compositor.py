@@ -16,8 +16,8 @@ def get_golden():
         golden_path = os.path.join(GOLDEN_ASSETS_DIR,filename)
 
         if not os.path.exists(golden_path):
-            return FileNotFoundError(f"[GACHACOMPOSITOR] Golden Asset Not Found: {golden_path}")
-        return golden_path
+            print(f"[GACHACOMPOSITOR] Golden Asset Not Found: {golden_path}")        
+            return None
     
     except Exception as e :
         print(f"[GACHACOMPOSITOR] Golden asset Error {e}")

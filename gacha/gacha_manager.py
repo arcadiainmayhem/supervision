@@ -12,7 +12,7 @@ class GachaManager():
         self.has_fired_today = False
         self.last_fire_date = None
 
-        self.daily_fire_count = None    
+        self.daily_fire_count = 0    
 
 
     def check_gacha(self,visitor):
