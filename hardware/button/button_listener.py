@@ -47,7 +47,7 @@ def register_shutdown_button(on_press):
 
         GPIO.add_event_detect(
             SHUTDOWN_TRIGGER_PIN,
-            GPIO.FALLING,
+            GPIO.RISING,
             callback= on_press,
             bouncetime=SHUTDOWN_BUTTON_BOUNCE_TIME
         )
