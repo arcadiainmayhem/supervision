@@ -36,9 +36,10 @@ class GachaManager():
         if roll < probabilty:
             self.daily_fire_count += 1
             print(f"[GACHAMANAGER] Gacha Triggered")
-            return True            
+            return True        
             
-        return False
+        #most of the time false
+        return True
 
     # def check_gacha(self, visitor):
     #     #if its over MAX count , return
