@@ -210,7 +210,7 @@ class InstallationDirector :
                         #overrides
                         visitor["output_path"] = golden_path
                 except Exception as e:
-                    print(f"[INSTALLTIONDIRECTOR] Gacha Corruption Failed : {e} - printing normal card")
+                    print(f"[INSTALLATIONDIRECTOR] Gacha Corruption Failed : {e} - printing normal card")
 
             #print after saving from path
 

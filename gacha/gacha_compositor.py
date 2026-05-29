@@ -18,6 +18,8 @@ def get_golden():
         if not os.path.exists(golden_path):
             print(f"[GACHACOMPOSITOR] Golden Asset Not Found: {golden_path}")        
             return None
+        
+        return golden_path
     
     except Exception as e :
         print(f"[GACHACOMPOSITOR] Golden asset Error {e}")
