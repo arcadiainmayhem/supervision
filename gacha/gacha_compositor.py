@@ -12,7 +12,7 @@ GOLDEN_ASSETS_DIR = "test/golden"
 def get_golden():
     try :
         index = random.randint(1 ,5)
-        filename=f"goldenspecial_{index}.pg"
+        filename=f"goldenspecial_{index}.jpg"
         golden_path = os.path.join(GOLDEN_ASSETS_DIR,filename)
 
         if not os.path.exists(golden_path):
