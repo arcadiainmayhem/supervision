@@ -20,7 +20,7 @@ def log_encounter(visitor):
     entry = {
         "visitor_number" : visitor["visitor_number"],
         "timestamp" : visitor["timestamp"].strftime("%H:%M"),
-        "rarity" : visitor["rarity_tier"],
+        "Unlocked rarities" : visitor["unlocked_rarity_tier"],
         "score" : round(visitor["satisfaction_score"] , 2),
         "printed":visitor.get("printed",False)
     }
