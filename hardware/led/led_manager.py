@@ -10,6 +10,7 @@ if not DEV_MODE:
     from rpi_ws281x import PixelStrip , Color
     import serial #to communicate with ESP Receiver
 
+SERIAL_PORT = '/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0'
 
 class LEDManager():
 
@@ -25,7 +26,9 @@ class LEDManager():
             self.strip.begin()
             print("[LEDMANAGER] DEBUG - Attempting serial init")
             try:
-                self.serial = serial.Serial('/dev/ttyUSB0' , 115200 , timeout= 1)
+                self.serial = serial.Serial( SERIAL_PORT , 
+                                            115200 , 
+                                            timeout= 1)
                 print("[LEDMANAGER] Serial to ESP32 B Ready")
             except Exception as e:
                 self.serial = None
