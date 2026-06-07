@@ -27,24 +27,28 @@ def _verify_exists(picked_filename, available_filenames, layer):
 
 
 def select(visitor):
-    rarity = visitor["rarity_tier"]
+    unlocked = visitor["unlocked_rarity_tier"]
     selected = {}
       
     slots = {
-        "background" : BACKGROUND_POOL[rarity],
-        "title" : TITLE_POOL[rarity],
-        "border" : BORDER_POOL[rarity],
-        "face":       FACE_POOL[rarity],
-        "eyes":       EYE_POOL[rarity],
-        "nose":       NOSE_POOL[rarity],
-        "mouth":      MOUTH_POOL[rarity], 
-        "logo" : LOGO_POOL[rarity],
+        "background" : BACKGROUND_POOL,
+        "title" : TITLE_POOL,
+        "border" : BORDER_POOL,
+        "face":       FACE_POOL,
+        "eyes":       EYE_POOL,
+        "nose":       NOSE_POOL,
+        "mouth":      MOUTH_POOL, 
+        "logo" : LOGO_POOL,
     }
 
     #looks through and verify the filename exists
-    for layer, available_filenames in slots.items():
-        picked_filename = weighted_pick(available_filenames)
-        selected[layer] = _verify_exists(picked_filename, available_filenames, layer)
+    for layer, pool in slots.items():
+        combined = []
+        for tier in unlocked:
+            if tier in pool:
+                combined.extend(pool[tier])
+        picked_filename = weighted_pick(combined)
+        selected[layer] = _verify_exists(picked_filename, combined, layer)
 
     visitor["selected_elements"] = selected
     

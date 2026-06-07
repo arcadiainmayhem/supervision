@@ -13,17 +13,12 @@ def decide(visitor):
     visitor["satisfaction_score"] = final_score
     visitor["output_type"] = "selphy"
 
-    #rarity_tier - filters to 3 types of rarity
+    #rarity_unlocked_tier - filters to 3 types of rarity
     if final_score >= RARITY_RARE_MIN:
-        visitor["rarity_tier"] = "rare"
+        visitor["unlocked_rarity_tier"] = ["rare" , "common" , "uncommon"]
     elif final_score >= RARITY_UNCOMMON_MIN:
-        visitor["rarity_tier"] = "uncommon"
+        visitor["unlocked_rarity_tier"] = ["common" , "uncommon"]
     else:
-        visitor["rarity_tier"] = "common"
+        visitor["unlocked_rarity_tier"] = ["common"]
  
     print(f"[DECIDER] presence={visitor['presence_score']} expression={visitor['expression_score']} context={visitor['context_score']} time={visitor['time_score']}")
-    # # output type
-    # if final_score >= OUTPUT_SELPHY_THRESHOLD:
-    #     visitor["output_type"] = "selphy"
-    # else:
-    #     visitor["output_type"] = "thermal"

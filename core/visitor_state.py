@@ -72,7 +72,7 @@ def create_visitor_state(visitor_number):
     "time_score" : None,
     "time_label" : None,
     #--For Feature Decision
-    "rarity_tier" : None,
+    "unlocked_rarity_tier" : None,
 
     "printed" : False,
 }
