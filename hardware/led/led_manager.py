@@ -8,6 +8,8 @@ from hardware.led.led_constants import *
 #only on pi
 if not DEV_MODE:
     from rpi_ws281x import PixelStrip , Color
+    import serial #to communicate with ESP Receiver
+
 
 class LEDManager():
 
@@ -21,6 +23,12 @@ class LEDManager():
         if not DEV_MODE:
             self.strip = PixelStrip(LED_COUNT , LED_SIGNAL_PIN, brightness = BRIGHTNESS )
             self.strip.begin()
+            try:
+                self.serial = serial.Serial('/dev/ttyUSB0' , 115200 , timeout= 1)
+                print("[LEDMANAGER] Serial to ESP32 B Ready")
+            except Exception as e:
+                self.serial = None
+                print(f"[LEDMANAGER] Serial init Failed : {e}")
 
     def set_state(self , state : LEDState):
         self.stop_animation = True #stops current LED state animation 
@@ -36,6 +44,10 @@ class LEDManager():
                                               args=(state,))
         self.animation_thread.daemon = True #means that its a background thread
         self.animation_thread.start()
+
+
+        #send to esp32
+        self._send_to_esp32(state)
 
     def _animate(self , state : LEDState):    
         if DEV_MODE:
@@ -101,7 +113,17 @@ class LEDManager():
                 pass
 
 
+    def _set_to_esp32(self,state:LEDState):
+        if DEV_MODE:
+           print(f"[LEDMANAGER] ESP32 State: {state.value.upper()}")
+           return 
 
+        if self.serial:
+            try:
+                self.serial.write(f"{state.value.upper()}\n".encode())
+            
+            except Exception as e:
+                print(f"[LEDMANAGER] Serial send failed: {e}")
 
     def _set_all(self , r,g,b):
         for i in range (LED_COUNT):
