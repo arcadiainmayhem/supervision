@@ -114,7 +114,7 @@ class LEDManager():
                 pass
 
 
-    def _set_to_esp32(self,state:LEDState):
+    def _send_to_esp32(self,state:LEDState):
         if DEV_MODE:
            print(f"[LEDMANAGER] ESP32 State: {state.value.upper()}")
            return 
