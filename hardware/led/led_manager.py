@@ -23,6 +23,7 @@ class LEDManager():
         if not DEV_MODE:
             self.strip = PixelStrip(LED_COUNT , LED_SIGNAL_PIN, brightness = BRIGHTNESS )
             self.strip.begin()
+            print("[LEDMANAGER] DEBUG - Attempting serial init")
             try:
                 self.serial = serial.Serial('/dev/ttyUSB0' , 115200 , timeout= 1)
                 print("[LEDMANAGER] Serial to ESP32 B Ready")

@@ -39,7 +39,7 @@ class GachaManager():
             return True        
             
         #most of the time false
-        return True
+        return False
 
     # def check_gacha(self, visitor):
     #     #if its over MAX count , return

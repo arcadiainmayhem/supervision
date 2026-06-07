@@ -81,7 +81,7 @@ def extract_coordinates(mp_results , image):
         right_shoulder = landmarks[12]
 
         #just use fallback crop
-        if left_shoulder.visiblity < 0.6 or right_shoulder.visibility < 0.6 :
+        if left_shoulder.visibility < 0.6 or right_shoulder.visibility < 0.6 :
             return _fallback_crop(image)
 
         left_x = int(left_shoulder.x * IMG_WIDTH)
