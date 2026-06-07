@@ -181,7 +181,7 @@ class InstallationDirector :
         #brain + determines if its selphy , or thermal
         decide(visitor)
         print("Satisfaction Score:", visitor["satisfaction_score"])
-        print("Rarity:", visitor["rarity_tier"])
+        print("Unlocked Rarities:", visitor["unlocked_rarity_tier"])
         print("Output:", visitor["output_type"])
 
     
