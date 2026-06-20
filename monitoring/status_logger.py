@@ -47,9 +47,8 @@ def update_status(key , value):
 
 
 def get_print_queue():
-    result =subprocess.run("lpstat",
-                   "-o",
+    result =subprocess.run(["lpstat","-o"],
                    capture_output=True,
                    text= True)
-    lines = [l.strip() for l in result.stdout().splitlines() if l.strip()]
+    lines = [l.strip() for l in result.stdout.splitlines() if l.strip()]
     return lines #empty list , nothing queued
