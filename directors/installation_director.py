@@ -11,17 +11,19 @@ from core.decider.installation_decider import decide
 from core.installation_constants import *
 
 from computervision.interpreter.interpretation_director import intepret_everything
-from hardware.button.button_listener import register_trigger_button
+from hardware.button.button_listener import register_trigger_button , register_hold_button
 from datetime import datetime
 from core.save_manager import save
 
 from hardware.led.led_manager import LEDManager
 from hardware.led.led_states import LEDState
+from hardware.hardware_config import *
 
 from gacha.gacha_manager import GachaManager
 from gacha.gacha_compositor import get_golden
 
 from monitoring.status_server import start_in_thread
+from monitoring import consumables
 from monitoring import status_logger
 #main coordinator 
 
@@ -62,6 +64,9 @@ class InstallationDirector :
         #set initial led state to idle
         self.led_manager.set_state(LEDState.IDLE)
 
+        #checking print counts + ribbon counts
+        consumables.load()
+
         #start thread for server monitoring
         start_in_thread()
         print(f"[INSTALLTIONDIECTOR] Status serve stated on port, {STATUS_SERVER_PORT}")
@@ -72,7 +77,8 @@ class InstallationDirector :
         #button listener
         #setup button listener + initialise
         register_trigger_button(self._run_encounter)
-
+        register_hold_button(REBOOT_TRIGGER_PIN , self.reboot)
+        register_hold_button(SHUTDOWN_TRIGGER_PIN, self.shutdown)
         #signal to microphone 
 
     def create_visitor(self):
@@ -113,17 +119,23 @@ class InstallationDirector :
 
             #[ENCOUNTER TRIGGERED]
             self.led_manager.set_state(LEDState.TRIGGERED)
+            #added sleep to show processing effect
+            time.sleep(TRIGGER_HOLD_SECONDS)    
+            #shifted processing up 
+            #[UPDATE SERVER STATUS]
+            status_logger.update_status("state" , "processing")    
+
+            #[PROCESSING ENCOUNTER TRIGGERED]
+            self.led_manager.set_state(LEDState.PROCESSING)
+
             #[VISITOR CREATED]
             self.current_visitor =  self.create_visitor()
 
             self.obelisk_director.observe(self.current_visitor) #captures frame and runs pipeline
-            #[UPDATE SERVER STATUS]
-            status_logger.update_status("state" , "processing")        
+   
             #intepret and store in visitor dict
             intepret_everything(self.current_visitor)
 
-            #[PROCESSING ENCOUNTER TRIGGERED]
-            self.led_manager.set_state(LEDState.PROCESSING)
             self._evaluate_visitor_profile(self.current_visitor) #decide + score value type
 
             #select elements for selphy
@@ -134,15 +146,27 @@ class InstallationDirector :
 
             #[EARLY RETURN IF NOT SUCCESS]
             if not success:
-                print(f"[INSTALLATIONDIRECTOR] Print failed — resetting debounce for retry ")
-                self.last_trigger_time = PRINT_ERROR_COOLDOWN #allows immediate retry
-                status_logger.update_status("state" , "error")
+                print(f"[INSTALLATIONDIRECTOR] Print failed — flagged, ready for next ")
+                self.led_manager.set_state(LEDState.ERROR)
+                status_logger.log_error("[INSTALLATIONDIRECTOR] Installation Director , Print Failed")
+                status_logger.update_status("state","error")
+                return #exits try -> finally resets flags 
+
+
 
             #[UPDATE SERVER STATUS]
             status_logger.log_encounter(self.current_visitor)
             status_logger.update_status("state" , "printing")     
+
+            #log print + ink ribbon used
+            consumables.record_print() # only count real prints
+
             #[COMPLETED TRIGGERED]
             self.led_manager.set_state(LEDState.COMPLETED)
+
+            #added sleep after complete to show led effects
+            time.sleep(COMPLETED_HOLD_SECONDS)
+
             print('Route Output Done')
             #add visitor to history to measure length
             self._add_to_visitor_history(self.current_visitor)
@@ -219,9 +243,14 @@ class InstallationDirector :
             return success
 
 
-
+    #in program housekeeping
     def _reset(self):
-        self.led_manager.set_state(LEDState.IDLE)
+
+        if consumables.caution():
+            self.led_manager.set_state(LEDState.CAUTION) #amber
+        else:
+            self.led_manager.set_state(LEDState.IDLE)
+
         self.current_visitor = None
         self.current_visitor_score = None
         self.is_encounter_running = False
@@ -232,6 +261,12 @@ class InstallationDirector :
         self.isActive = False
         #tell obelisk to stop watching
         #stop printers
+
+    #reboot 
+    def reboot(self , channel = None):
+        self.stop()
+        os.system("sudo reboot")
+
 
     #full shutdown
     def shutdown(self , channel = None):

@@ -1,8 +1,8 @@
 
 
 from hardware.hardware_config import *
-from core.installation_constants import DEV_MODE
-
+from core.installation_constants import *
+import time
 
 if not DEV_MODE:
     import RPi.GPIO as GPIO
@@ -52,3 +52,31 @@ def register_shutdown_button(on_press):
             bouncetime=SHUTDOWN_BUTTON_BOUNCE_TIME
         )
         
+
+
+def register_hold_button( pin , callback , hold_duration = HOLD_DURATION):
+
+    if DEV_MODE:
+        print(f"[BUTTONLISTENER] DEV Hold-Button Registered")
+        return
+
+
+    GPIO.setup(pin , GPIO.IN , pull_up_down=GPIO.PUD_UP) #internall pull up resistor holds the pin at 1 at rest 
+
+
+    def _on_edge(channel):
+        #press detected - confirm it stays hold
+
+        start = time.time()
+        while time.time() - start < hold_duration:
+            if GPIO.input(pin) != GPIO.LOW: #HIGH -> LOW measures change
+                print("[BUTTONLISTENER] Released too early - aborted")
+                return
+            time.sleep(HOLD_POLL_INTERVAL)
+
+        #survived full window
+        print("[BUTTONLISTENER] Hold Confirmed")
+        callback()
+
+
+    GPIO.add_event_detect(pin , GPIO.FALLING, callback=_on_edge, bouncetime= 300)

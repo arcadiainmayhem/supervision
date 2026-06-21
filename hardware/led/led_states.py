@@ -11,3 +11,4 @@ class LEDState(Enum):
     PROUD = "proud"
     GACHA = "gacha"
     SATAN = "666"
+    CAUTION = "caution"
