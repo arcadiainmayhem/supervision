@@ -14,6 +14,7 @@ STATE_COLORS = {
     "satan" : None #animated - handled by manager , white yellow red
 }
 
+LED_CHANNEL = 1
 
 FLASH_TIMES = 4
 CHASE_SPEED = 0.1

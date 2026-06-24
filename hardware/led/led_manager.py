@@ -22,7 +22,7 @@ class LEDManager():
         
         #only on pi
         if not DEV_MODE:
-            self.strip = PixelStrip(LED_COUNT , LED_SIGNAL_PIN, brightness = BRIGHTNESS )
+            self.strip = PixelStrip(LED_COUNT , LED_SIGNAL_PIN, brightness = BRIGHTNESS , channel = LED_CHANNEL )
             self.strip.begin()
             print("[LEDMANAGER] DEBUG - Attempting serial init")
             try:
