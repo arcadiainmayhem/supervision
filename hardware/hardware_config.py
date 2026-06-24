@@ -20,3 +20,7 @@ HOLD_POLL_INTERVAL = 0.05 #hold often to recheck during the hold
 #LED RELATED
 LED_COUNT = 5
 BRIGHTNESS = 80
+
+#ESP RELATED
+SERIAL_PORT = '/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0'
+BAUD_RATE = 115200
