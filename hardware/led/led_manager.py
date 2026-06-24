@@ -7,10 +7,8 @@ from hardware.led.led_constants import *
 
 #only on pi
 if not DEV_MODE:
-    from rpi_ws281x import PixelStrip , Color
     import serial #to communicate with ESP Receiver
 
-SERIAL_PORT = '/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0'
 
 class LEDManager():
 
@@ -19,7 +17,9 @@ class LEDManager():
         self.current_state = LEDState.IDLE
         self.stop_animation = False #flag for stopping animation
         self.animation_thread = None
-        
+        self.port = SERIAL_PORT
+        self.baud = BAUD_RATE
+
         #only on pi
         if not DEV_MODE:
             self.strip = PixelStrip(LED_COUNT , LED_SIGNAL_PIN, brightness = BRIGHTNESS , channel = LED_CHANNEL )
@@ -52,6 +52,42 @@ class LEDManager():
 
         #send to esp32
         self._send_to_esp32(state)
+        
+
+    def _send_to_esp32(self,state:LEDState):
+        if DEV_MODE:
+           print(f"[LEDMANAGER] ESP32 State: {state.value.upper()}")
+           return 
+
+        if self.serial:
+            try:
+                self.serial.write(f"{state.value.upper()}\n".encode())
+                #catching OS error
+            except (OSError , serial.SerialException) as e:
+                print(f"[LEDMANAGER] Serial write failed: {e} - reconnecting")
+                #tries to reconnect 
+                self._reconnect()
+                try:
+                    self.serial.write(f"{state.value.upper()}\n".encode())
+                except (OSError, serial.SerialException) as e2:
+                        print(f"[LEDMANAGER] Retry failed: {e2}")
+
+    def _reconnect(self):
+        try:
+            if self.serial and self.serial.is_open:
+                self.serial.close()
+        except Exception:
+            pass
+
+        try:
+            self.serial = serial.Serial(self.port,self.baud,timeout=1)
+            print("[LEDMANAGER] Serial Reconnected")
+        except Exception as e:
+            print(f"[LEDMANAGER] Reconnect failed : {e}")
+            self.serial = None
+
+
+
 
     def _animate(self , state : LEDState):    
         if DEV_MODE:
@@ -117,37 +153,6 @@ class LEDManager():
                 pass
 
 
-    def _send_to_esp32(self,state:LEDState):
-        if DEV_MODE:
-           print(f"[LEDMANAGER] ESP32 State: {state.value.upper()}")
-           return 
-
-        if self.serial:
-            try:
-                self.serial.write(f"{state.value.upper()}\n".encode())
-                #catching OS error
-            except (OSError , serial.SerialException) as e:
-                print(f"[LEDMANAGER] Serial write failed: {e} - reconnecting")
-                #tries to reconnect 
-                self._reconnect()
-                try:
-                    self.serial.write(f"{state.value.upper()}\n".encode())
-                except (OSError, serial.SerialException) as e2:
-                        print(f"[LEDMANAGER] Retry failed: {e2}")
-
-    def _reconnect(self):
-        try:
-            if self.serial and self.serial.is_open:
-                self.serial.close()
-        except Exception:
-            pass
-
-        try:
-            self.serial = serial.Serial(self.port,self.baud,timeout=1)
-            print("[LEDMANAGER] Serial Reconnected")
-        except Exception as e:
-            print(f"[LEDMANAGER] Reconnect failed : {e}")
-            self.serial = None
 
     def _set_all(self , r,g,b):
         for i in range (LED_COUNT):
