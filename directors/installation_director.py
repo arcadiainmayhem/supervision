@@ -249,6 +249,7 @@ class InstallationDirector :
         if consumables.caution():
             self.led_manager.set_state(LEDState.CAUTION) #amber
         else:
+            print("[INSTALLATIONDIRECTOR] Changing LEDState back to Idle")
             self.led_manager.set_state(LEDState.IDLE)
 
         self.current_visitor = None
