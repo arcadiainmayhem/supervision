@@ -1,5 +1,6 @@
 from flask import Flask , render_template , redirect
 from monitoring import status_logger
+from monitoring import consumables
 import threading
 from core.installation_constants import *
 import time
@@ -17,7 +18,8 @@ def status_page():
         status = status_logger.current_status,
         encounters = list(reversed(status_logger.encounter_log)),
         errors = list(reversed(status_logger.error_log)),
-        queue = status_logger.get_print_queue()
+        queue = status_logger.get_print_queue(),
+        consumables = consumables.get_counts(),
         )
 
 @app.route("/queue")
@@ -31,6 +33,16 @@ def cancel_jobs():
                    "-a",
                    SELPHY_PRINTER_NAME],
                    check = True)
+    return redirect("/")
+
+@app.route("/reset-paper",methods=["POST"])
+def reset_paper():
+    consumables.reset_paper()
+    return redirect("/")
+
+@app.route("/reset-ribbon",methods=["POST"])
+def reset_ink_ribbon():
+    consumables.reset_ink_ribbon()
     return redirect("/")
 
 def _color(value):

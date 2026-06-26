@@ -42,7 +42,7 @@ def record_print():
     _save()
 
 
-def _reset_paper():
+def reset_paper():
     
     global _paper_used
 
@@ -50,7 +50,7 @@ def _reset_paper():
     _save()
 
 
-def _reset_ink_ribbon():
+def reset_ink_ribbon():
     
     global _ink_ribbon_used
 

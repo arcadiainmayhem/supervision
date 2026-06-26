@@ -59,6 +59,15 @@
         <button type="submit">Cancel All Print Jobs</button>
     </form>
 
+    <p>Paper: {{ consumables.paper_used }} / {{ consumables.paper_cap }}</p>
+    <p>Ribbon: {{ consumables.ink_ribbon_used }} / {{ consumables.ink_ribbon_cap }}</p>
+    <form action="/reset-paper" method="post">
+        <button type="submit">Reset Paper Count</button>
+    </form>
+    <form action="/reset-ribbon" method="post">
+        <button type="submit">Reset Ribbon Count</button>
+    </form>
+
 </body>
 
 </html>
