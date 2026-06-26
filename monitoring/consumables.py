@@ -20,7 +20,7 @@ def load():
             with open(CONSUMABLES_STATE_PATH) as f:
                 d = json.load(f)
                 _paper_used = d.get("paper_used" , 0)
-                _ink_ribbon_used = d.get("ribbon_used", 0)
+                _ink_ribbon_used = d.get("ink_ribbon_used", 0)
         except (json.JSONDecodeError, OSError) as e:
             print(f"[CONSUMABLES] Load Failed , starting at 0 : {e}")
 
@@ -29,7 +29,7 @@ def _save():
     try:
         with open(CONSUMABLES_STATE_PATH, "w") as f:
             json.dump({"paper_used" : _paper_used,
-                       "Ink_Ribbon_Used": _ink_ribbon_used}, f)
+                       "ink_ribbon_used": _ink_ribbon_used}, f)
     except OSError as e:
         print(f"[CONSUMABLES] Save Failed : {e}")
 

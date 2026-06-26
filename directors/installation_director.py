@@ -245,11 +245,14 @@ class InstallationDirector :
 
     #in program housekeeping
     def _reset(self):
+        print("[INSTALLATIONDIRECTOR] RESETTING ENCOUNTER")
+
+        print(consumables.get_counts(), consumables.caution())
 
         if consumables.caution():
             self.led_manager.set_state(LEDState.CAUTION) #amber
         else:
-            print("[INSTALLATIONDIRECTOR] Changing LEDState back to Idle")
+            print("[INSTALLATIONDIRECTOR] Changing LEDState back to LEDSTATEIDLE")
             self.led_manager.set_state(LEDState.IDLE)
 
         self.current_visitor = None
