@@ -279,6 +279,9 @@ class InstallationDirector :
         #shutdown os
         os.system("sudo shutdown now")
 
+
+
+#===STRESS TEST 
     def _auto_trigger_loop(self):
         for i in range(STRESS_TEST_MAX_TRIGGERS):
             print(f"[INSTALLATIONDIRECTOR][STRESSTEST] Auto trigger {i+1} of {STRESS_TEST_MAX_TRIGGERS}")
