@@ -1,5 +1,5 @@
 from directors.installation_director import InstallationDirector
-from hardware.button.button_listener import register_shutdown_button
+#from hardware.button.button_listener import register_shutdown_button
 import time
 from core.installation_constants import *
 
@@ -13,7 +13,7 @@ def main():
     installation.start()
     print("Installation is Active")
 
-    register_shutdown_button(installation.shutdown)
+    #register_shutdown_button(installation.shutdown)
 
     #stress test
     if STRESS_TEST:
