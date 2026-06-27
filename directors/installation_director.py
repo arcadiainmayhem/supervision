@@ -11,7 +11,7 @@ from core.decider.installation_decider import decide
 from core.installation_constants import *
 
 from computervision.interpreter.interpretation_director import intepret_everything
-from hardware.button.button_listener import register_trigger_button , register_hold_button
+#from hardware.button.button_listener import register_trigger_button , register_hold_button
 from datetime import datetime
 from core.save_manager import save
 
@@ -77,8 +77,8 @@ class InstallationDirector :
         #button listener
         #setup button listener + initialise
         register_trigger_button(self._run_encounter)
-        register_hold_button(REBOOT_TRIGGER_PIN , self.reboot)
-        register_hold_button(SHUTDOWN_TRIGGER_PIN, self.shutdown)
+        #register_hold_button(REBOOT_TRIGGER_PIN , self.reboot)
+        #register_hold_button(SHUTDOWN_TRIGGER_PIN, self.shutdown)
         #signal to microphone 
 
     def create_visitor(self):
