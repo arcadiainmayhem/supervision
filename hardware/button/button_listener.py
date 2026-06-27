@@ -35,25 +35,25 @@ def register_trigger_button(on_press):
 
 
 
-def register_shutdown_button(on_press):
-    if DEV_MODE:
-        print("Dev mode - press SPACE to trigger")
-        keyboard.add_hotkey('q',on_press)
-        print("Shutdown Button Ready")
-    else:
-        # GPIO.setmode(GPIO.BCM)
+# def register_shutdown_button(on_press):
+#     if DEV_MODE:
+#         print("Dev mode - press SPACE to trigger")
+#         keyboard.add_hotkey('q',on_press)
+#         print("Shutdown Button Ready")
+#     else:
+#         # GPIO.setmode(GPIO.BCM)
 
-        # GPIO.setup(SHUTDOWN_TRIGGER_PIN, GPIO.IN , pull_up_down= GPIO.PUD_UP)
-        # #Added to clear buffer
-        # GPIO.remove_event_detect(SHUTDOWN_TRIGGER_PIN)
+#         # GPIO.setup(SHUTDOWN_TRIGGER_PIN, GPIO.IN , pull_up_down= GPIO.PUD_UP)
+#         # #Added to clear buffer
+#         # GPIO.remove_event_detect(SHUTDOWN_TRIGGER_PIN)
 
-        # GPIO.add_event_detect(
-        #     SHUTDOWN_TRIGGER_PIN,
-        #     GPIO.FALLING,
-        #     callback= on_press,
-        #     bouncetime=SHUTDOWN_BUTTON_BOUNCE_TIME
-        # )
-        register_hold_button(SHUTDOWN_TRIGGER_PIN , on_press , SHUTDOWN_BUTTON_BOUNCE_TIME)
+#         # GPIO.add_event_detect(
+#         #     SHUTDOWN_TRIGGER_PIN,
+#         #     GPIO.FALLING,
+#         #     callback= on_press,
+#         #     bouncetime=SHUTDOWN_BUTTON_BOUNCE_TIME
+#         # )
+#         register_hold_button(SHUTDOWN_TRIGGER_PIN , on_press , SHUTDOWN_BUTTON_BOUNCE_TIME)
 
 
 def register_hold_button( pin , callback , hold_duration = SHUTDOWN_HOLD_DURATION):
