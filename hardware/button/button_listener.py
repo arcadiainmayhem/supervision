@@ -56,7 +56,7 @@ def register_shutdown_button(on_press):
         register_hold_button(SHUTDOWN_TRIGGER_PIN , on_press , SHUTDOWN_BUTTON_BOUNCE_TIME)
 
 
-def register_hold_button( pin , callback , hold_duration = HOLD_DURATION):
+def register_hold_button( pin , callback , hold_duration = SHUTDOWN_HOLD_DURATION):
 
     if DEV_MODE:
         print(f"[BUTTONLISTENER] DEV Hold-Button Registered")
