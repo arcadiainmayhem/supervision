@@ -19,6 +19,7 @@ def create_visitor_state(visitor_number):
     "stillness_variable" : 999.0,
     "dwell_count" : 0,  
     
+    #Taken and placed in here from Extractor
     "color_saturation": 0,
     "color_hue": 0,
     "color_value": 0,

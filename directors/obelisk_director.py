@@ -244,8 +244,13 @@ class ObeliskDirector():
         visitor["color_value"] = color_results["average_value"]
         visitor["color_hue"] = color_results["dominant_hue"]
 
+        print("Color Results.....")
+        print("Saturation: ", color_results["average_saturation"])
+        print("Value: ", color_results["color_value"])
+        print("Hue: ", color_results["color_hue"])
 
         print("Categorising Results...")
+
         #classification
         categorised = classify(color_results)
         visitor["hue_category"] = categorised["hue_category"]

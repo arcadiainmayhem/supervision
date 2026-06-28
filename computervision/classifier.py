@@ -2,7 +2,7 @@
 from computervision.core.classifier_constants import *
 
 def classify(extracted):
-
+    #FROM EXTRACTOR
     saturation = extracted["average_saturation"]
     hue = extracted["dominant_hue"]
     value = extracted["average_value"]
@@ -30,5 +30,5 @@ def classify(extracted):
 
     return {
         'hue_category' : hue_category ,
-        'brightness' : brightness
+        'brightness' : brightness , 
     }
