@@ -55,6 +55,8 @@
     {% for job in queue%}
     <p class="error">{{job}}</p>
     {% endfor %}
+
+
     <form method="POST" action="/cancel-jobs">
         <button type="submit">Cancel All Print Jobs</button>
     </form>
@@ -67,6 +69,13 @@
     <form action="/reset-ribbon" method="post">
         <button type="submit">Reset Ribbon Count</button>
     </form>
+
+    <form action="/shutdown" method="post"
+        onsubmit="return confirm('Shut down the Obelisk? This ends the installation.')">
+        <button type="submit" class="danger">ShutDown Button</button>
+    </form>
+
+
 
 </body>
 

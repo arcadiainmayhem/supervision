@@ -261,6 +261,7 @@ class InstallationDirector :
      
 
          #pause
+         
     def stop(self):
         self.isActive = False
         #tell obelisk to stop watching

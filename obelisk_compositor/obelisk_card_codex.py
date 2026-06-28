@@ -47,18 +47,15 @@ BACKGROUND_POOL = {
 
 TITLE_POOL = {
     "common" : ["title_common_1.png", "title_common_2.png","title_common_3.png","title_common_4.png",],
-    # "uncommon" : ["title_uncommon_1.png","title_uncommon_2.png","title_uncommon_3.png"],
-    # "rare" : ["title_rare_1.png","title_rare_2.png"], 
+
 }
 
 BORDER_POOL = {
     "common" : ["border_common_1.png", "border_common_2.png","border_common_3.png","border_common_4.png","border_common_5.png"],
-    # "uncommon" : ["border_uncommon_1.png","border_uncommon_2.png","border_uncommon_3.png"],
-    # "rare" : ["border_rare_1.png","border_rare_2.png"],
+
 }
 
 LOGO_POOL = {
     "common" : ["logo_common_1.png", "logo_common_2.png","logo_common_3.png","logo_common_4.png"],
-    # "uncommon" : ["logo_uncommon_1.png","logo_uncommon_2.png","logo_uncommon_3.png"],
-    # "rare" : ["logo_rare_1.png","logo_rare_2.png"],
+
 }

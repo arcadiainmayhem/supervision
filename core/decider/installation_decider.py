@@ -40,7 +40,7 @@ def decide(visitor):
         f"presence={visitor['presence_score']:.2f} expression={visitor['expression_score']:.2f} "
         f"tiers={visitor['unlocked_rarity_tier']}" )
    
-    print("Contex Mult: " , CONTEXT_MULT)
+    print("Context Mult: " , CONTEXT_MULT)
   
     print("Time Mult: ", TIME_MULT)
 

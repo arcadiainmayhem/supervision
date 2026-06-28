@@ -45,6 +45,11 @@ def reset_ink_ribbon():
     consumables.reset_ink_ribbon()
     return redirect("/")
 
+@app.route("/shutdown" , methods = ["POST"])
+def shutdown():
+    subprocess.Popen(["sudo", "shutdown" , "now"])
+    return redirect("/")
+
 def _color(value):
     if value in ("ready" , "online" , "ok"):
         return "ok"
@@ -55,7 +60,12 @@ def _color(value):
     
 def _encounter_row(e):
     printed = "✓" if e["printed"] else "✗"
-    return f'<tr><td>{e["visitor_number"]}</td></td> {e["timestamp"]}</td></td> {e["rarity"]}</td></td>{e["score"]}</td></td>{"printed"}</td></tr>'
+    rarity = e["Unlocked rarities"]   # match the logger's actual key
+    return (f'<tr><td>{e["visitor_number"]}</td>'
+            f'<td>{e["timestamp"]}</td>'
+            f'<td>{rarity}</td>'
+            f'<td>{e["score"]}</td>'
+            f'<td>{printed}</td></tr>')
 
 def start_status_server():
     app.run(host = "0.0.0.0" , 
