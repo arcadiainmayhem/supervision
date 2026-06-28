@@ -35,17 +35,18 @@ class TimeLabel(Enum):
 
 
 #NORMALISED PRESENCE ( WEIGHING TO 1 )
-PRESENCE_W_FACE = 0.5
-PRESENCE_W_BODY = 0.2
-PRESENCE_W_COUNT = 0.3
-
+PRESENCE_W_FACE = 0.45
+PRESENCE_W_BODY = 0.20
+PRESENCE_W_COUNT = 0.25
+PRESENCE_W_STILLNESS = 0.1
 
 FACE_ORIENTATION_DIRECTION = {
     "forward" : 1.0 ,
     "down" : 0.7, 
     "left" : 0.6,
     "right" : 0.6,
-    "up" : 0.3 #disengaged
+    "up" : 0.3, #disengaged
+    "unknown" : 0.1
 }
 
 #PERSON COUNT
@@ -72,6 +73,11 @@ BRIGHTNESS_QUALITY = {
     "medium" : 0.59,
 }
 
+SATURATION_QUALITY = {
+    "muted" : 0.4,
+    "moderate" : 0.67,
+    "vivid" : 1.0
+}
 
 EXPRESSION_GESTURES = {
     "ILoveYou":    1.0,

@@ -10,7 +10,7 @@ def intepret_expression (visitor):
     hue_category =   visitor["hue_category"] 
     brightness = visitor["brightness"]
     saturation_raw = visitor["color_saturation"]
-    #saturation?
+    
 
     #from visitor dict
     current_gesture = visitor["gesture_detected"]
@@ -57,3 +57,5 @@ def intepret_expression (visitor):
 
     visitor["expression_score"] = expression_score
     visitor["expression_label"] = label
+
+

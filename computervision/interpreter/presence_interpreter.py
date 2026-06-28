@@ -2,8 +2,7 @@
 
 from core.scorecard_constants import *
 
-
-
+from computervision.core.intepreter_constants import *
 #for face body , gets dict pass in after intepreted
 
 def interpret_presence(visitor):
@@ -14,11 +13,12 @@ def interpret_presence(visitor):
     face_orientation = visitor["face_orientation"]
     body_detected = visitor["body_detected"]
     person_count = visitor["person_count"] 
+    stillness_value = visitor["stillness_variable"]
 
     #==FACE 
     #CHECK FOR FACE
     if face_detected: 
-        face_score = FACE_ORIENTATION_DIRECTION.get(face_orientation, FACE_ORIENTATION_DIRECTION["forward"])
+        face_score = FACE_ORIENTATION_DIRECTION.get(face_orientation, FACE_ORIENTATION_DIRECTION["unknown"])
     else:
         face_score = 0
 
@@ -35,11 +35,16 @@ def interpret_presence(visitor):
     else:
         count_score = PERSON_COUNT_NONE
 
+    # inverted: low variance = still = high score
+    #STILNESS
+    stillness_score = 1 - min(stillness_value / STILLNESS_CEILING , 1.0)
+
     #GETS TOTAL PRESENCE SCORE
     presence_score = (
         face_score * PRESENCE_W_FACE +
         body_score * PRESENCE_W_BODY +
-        count_score * PRESENCE_W_COUNT
+        count_score * PRESENCE_W_COUNT +
+        stillness_score * PRESENCE_W_STILLNESS
     ) #gets normalised 
 
 

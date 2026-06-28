@@ -1,0 +1,4 @@
+
+
+
+STILLNESS_CEILING = 25.0
