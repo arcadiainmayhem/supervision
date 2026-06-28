@@ -16,33 +16,31 @@ def interpret_presence(visitor):
     person_count = visitor["person_count"] 
 
     #==FACE 
-    if face_detected: presence_score += SCORE_FACE_DETECTED 
-
-    if face_orientation == "forward":
-        presence_score += SCORE_FACE_FRONT
-    elif face_orientation == "left":
-        presence_score += SCORE_FACE_LEFT
-    elif face_orientation == "right":
-        presence_score += SCORE_FACE_RIGHT
-    elif face_orientation == "up":
-        presence_score += SCORE_FACE_UP
-    elif face_orientation == "down":
-        presence_score += SCORE_FACE_DOWN
+    #CHECK FOR FACE
+    if face_detected: 
+        face_score = FACE_ORIENTATION_DIRECTION.get(face_orientation, FACE_ORIENTATION_DIRECTION["forward"])
     else:
-        presence_score += SCORE_FACE_FRONT
-
+        face_score = 0
 
     #BODY
-    if body_detected: presence_score += SCORE_BODY_DETECTED 
+    body_score = 1.0 if body_detected else 0.0
 
+    #COUNT
     if person_count == 1:
-        presence_score += SCORE_PERSON_SOLO
-    elif 2 <= person_count <= 4 :
-        presence_score += SCORE_MULTI_PERSON_2_4
+        count_score = PERSON_COUNT_SOLO
+    elif 2 <= person_count <= 4:
+        count_score = PERSON_COUNT_PAIR
     elif person_count >= 5:
-        presence_score += SCORE_MULTI_PERSON_5_PLUS
+        count_score = PERSON_COUNT_CROWD
     else:
-        presence_score += SCORE_PERSON_SOLO
+        count_score = PERSON_COUNT_NONE
+
+    #GETS TOTAL PRESENCE SCORE
+    presence_score = (
+        face_score * PRESENCE_W_FACE +
+        body_score * PRESENCE_W_BODY +
+        count_score * PRESENCE_W_COUNT
+    ) #gets normalised 
 
 
     #DETERMINE PRESENCE LABEL
@@ -52,7 +50,7 @@ def interpret_presence(visitor):
         label = PresenceLabel.PARTIAL
     elif face_detected and face_orientation == "down":
         label = PresenceLabel.DEFERENTIAL
-    elif face_detected and face_orientation in ("left" , "right" , "up" , "down"):
+    elif face_detected and face_orientation in ("left" , "right" , "up" ):
         label = PresenceLabel.AVERTED
     elif person_count >= 5:
         label = PresenceLabel.CROWD

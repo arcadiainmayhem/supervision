@@ -33,37 +33,62 @@ class TimeLabel(Enum):
     DEEPOFNIGHT = "deep_of_night"
     
 
-    
 
-#--PRESENCE AXIS
-SCORE_FACE_DETECTED = 0.10 #COMMON
+#NORMALISED PRESENCE ( WEIGHING TO 1 )
+PRESENCE_W_FACE = 0.5
+PRESENCE_W_BODY = 0.2
+PRESENCE_W_COUNT = 0.3
 
-# ── FACE ORIENTATION SCORES ────────────────────
-SCORE_FACE_FRONT          = 0.12
-SCORE_FACE_DOWN           = 0.22   # bowed — deferential
-SCORE_FACE_LEFT           = 0.15
-SCORE_FACE_RIGHT          = 0.15
-SCORE_FACE_UP             = 0.08   # disengaged
 
-SCORE_BODY_DETECTED = 0.1 # COMMON 
+FACE_ORIENTATION_DIRECTION = {
+    "forward" : 1.0 ,
+    "down" : 0.7, 
+    "left" : 0.6,
+    "right" : 0.6,
+    "up" : 0.3 #disengaged
+}
 
-SCORE_PERSON_SOLO = 0.1
-SCORE_MULTI_PERSON_2_4 = -0.2 #UNSURE WHICH SUBJECT IT IS , AMBIGUOUS
-SCORE_MULTI_PERSON_5_PLUS = 0.2 #RARE -TODO MIGHT NEED TO GUARD AGAINST CROWD RECOGNITION AND FACTORING THAT IN
+#PERSON COUNT
+PERSON_COUNT_SOLO = 1.0 #one clear subject
+PERSON_COUNT_PAIR = 0.3 #2 - 4
+PERSON_COUNT_CROWD = 0.5 #>0.5
+PERSON_COUNT_NONE = 0.0
 
 
 #--EXPRESSION AXIS
-SCORE_HUE_WARM = 0.12
-SCORE_HUE_COOL = 0.13
-SCORE_HUE_NEUTRAL = 0.09
-SCORE_BRIGHTNESS_LIGHT = 0.13
-SCORE_BRIGHTNESS_DARK = 0.12
-SCORE_BRIGHTNESS_MEDIUM = 0.12
+EXPRESSION_W_COLOR = 0.4
+EXPRESSION_W_GESTURE = 0.6
+
+
+HUE_QUALITY = {
+    "cool" : 1.0,
+    "warm" : 0.9,
+    "neutral" : 0.55
+}
+
+BRIGHTNESS_QUALITY = {
+    "light" : 1.0,
+    "dark" : 0.9,
+    "medium" : 0.59,
+}
+
+
+EXPRESSION_GESTURES = {
+    "ILoveYou":    1.0,
+    "Victory":     0.95,
+    "Thumbs_Up":   0.70,
+    "Open_Palm":   0.60,
+    "Pointing_Up": 0.50,
+    "Thumbs_Down": 0.50,
+    "Closed_Fist": 0.10,
+    "Praying" : 0.82,
+    "Unknown":    0.12,
+}
 
 #GESTURES
 SCORE_GESTURE_PRAYING = 0.25  # rare, intentional
 SCORE_GESTURE_OPEN_PALM   = 0.10   # receptive
-SCORE_GESTURE_CLOSED_FIST = -0.20
+SCORE_GESTURE_CLOSED_FIST = 0.10
 SCORE_GESTURE_POINTING_UP    = 0.05   # engaged but neutral
 SCORE_GESTURE_THUMBS_DOWN = 0.08
 SCORE_GESTURE_THUMBS_UP = 0.15
