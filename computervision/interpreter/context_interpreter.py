@@ -54,6 +54,9 @@ def intepret_context (visitor):
     else:                                        # odd
         context_score += SCORE_NUMEROLOGY_ODD
 
+
+
+    #CONTEXT LABEL
     if current_moon_phase == "full" and current_element in("fire" ,  "earth"):
         label = ContextLabel.COAGULATION
     elif current_moon_phase == "full" and current_element in ("water" ,  "air" ):
