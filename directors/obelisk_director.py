@@ -245,9 +245,9 @@ class ObeliskDirector():
         visitor["color_hue"] = color_results["dominant_hue"]
 
         print("Color Results.....")
-        print("Saturation: ", color_results["average_saturation"])
-        print("Value: ", color_results["color_value"])
-        print("Hue: ", color_results["color_hue"])
+        print("Saturation: ", visitor["color_saturation"])
+        print("Value: ", visitor["color_value"])
+        print("Hue: ", visitor["color_hue"])
 
         print("Categorising Results...")
 
