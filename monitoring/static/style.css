@@ -4,15 +4,31 @@
        
        
 
-       body { font-family: monospace; padding: 20px; background: #111; color: #eee; }
+ body { font-family: monospace; padding: 20px; background: #111; color: #eee; }
 
-        h1 { color: #fff; }
+       h1 { color: #fff; }
 
-        .ok { color: #0f0; }
-        .error { color: #f00; }
-        .unknown { color: #ff0; }
-        .unreachable { color : #f00;}
+       .ok { color: #0f0; }
+       .error { color: #f00; }
+       .unknown { color: #ff0; }
+       .unreachable { color : #f00;}
         
-        table { width: 100%; border-collapse: collapse; }
-        td, th { padding: 6px; border-bottom: 1px solid #333; text-align: left; }
-        th { color: #aaa; }
+       table { width: 100%; border-collapse: collapse; }
+       td, th { padding: 6px; border-bottom: 1px solid #333; text-align: left; }
+       th { color: #aaa; }
+
+
+
+
+form {
+              margin-top: 12px;
+ }
+
+
+.danger {
+    margin-top: 28px;        /* extra gap above, sets it apart from resets */
+    background: #8b0000;     /* dark red — reads as danger */
+    color: #fff;
+    border: 1px solid #b00;
+    padding: 8px 14px;
+}
