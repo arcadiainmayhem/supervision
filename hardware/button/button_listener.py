@@ -25,10 +25,22 @@ def register_trigger_button(on_press):
 
         GPIO.remove_event_detect(BUTTON_TRIGGER_PIN)  # clear buffer + remove old
         
+        def _on_edge(channel):
+            #falling edge seen - 
+            start = time.time()
+            while time.time() - start < TRIGGER_CONFIRM_DURATION :
+                if GPIO.input(BUTTON_TRIGGER_PIN) != GPIO.LOW :
+                    print("[BUTTONLISTENER] Trigger Glitch rejected - Line Bounce")
+                    return
+                time.sleep(HOLD_POLL_INTERVAL)
+            print("[BUTTONLISTENER] Trigger Confirmed")
+            on_press(channel)
+
+
         GPIO.add_event_detect(
             BUTTON_TRIGGER_PIN,
             GPIO.FALLING,
-            callback= on_press,
+            callback= _on_edge,
             bouncetime=BUTTON_BOUNCE_TIME
         )
         

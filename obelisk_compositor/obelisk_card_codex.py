@@ -27,7 +27,7 @@ NOSE_POOL = {
 
 MOUTH_POOL = {
     "common" : ["mouth_common_1.png", "mouth_common_2.png","mouth_common_3.png","mouth_common_4.png","mouth_common_5.png","mouth_common_6.png",
-                "mouth_common_7.png","mouth_common_8.png","mouth_common_9.png","mouth_common_10.png",],
+                "mouth_common_7.png","mouth_common_8.png","mouth_common_9.png","mouth_common_10.png","mouth_common_11.png"],
     "uncommon" : ["mouth_uncommon_1.png","mouth_uncommon_2.png","mouth_uncommon_3.png",],
     "rare" : ["mouth_rare_1.png","mouth_rare_2.png",],  
 }
@@ -35,12 +35,12 @@ MOUTH_POOL = {
 
 BACKGROUND_POOL = {
     "common" : ["background_common_1.png", "background_common_2.png","background_common_3.png","background_common_4.png","background_common_5.png",
-                "background_common_6.png","background_common_7.png","background_common_8.png","background_common_9.png","background_common_10.png"
-                ,"background_common_11.png","background_common_12.png","background_common_13.png","background_common_14.png","background_common_15.png",
+                "background_common_6.png","background_common_7.png","background_common_8.png","background_common_9.png","background_common_10.png",
+                "background_common_11.png","background_common_12.png","background_common_13.png","background_common_14.png","background_common_15.png",
                 "background_common_16.png","background_common_17.png","background_common_18.png","background_common_19.png","background_common_20.png",
-                "background_common_21.png",],
-    "uncommon" : ["background_uncommon_1.png","background_uncommon_2.png","background_uncommon_3.png","background_uncommon_4.png","background_uncommon_5.png","background_uncommon_6.png","background_uncommon_7.png"],
-    "rare" : ["background_rare_1.png","background_rare_2.png","background_rare_3.png","background_rare_4.png"], 
+                "background_common_21.png","background_common_22.png","background_common_23.png","background_common_24.png","background_common_25.png",
+                "background_common_26.png","background_common_27.png","background_common_28.png","background_common_29.png","background_common_30.png",
+                "background_common_31.png","background_common_32.png",],
 }
 
         
