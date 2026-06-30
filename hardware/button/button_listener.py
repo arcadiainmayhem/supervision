@@ -40,7 +40,7 @@ def register_trigger_button(on_press):
         GPIO.add_event_detect(
             BUTTON_TRIGGER_PIN,
             GPIO.FALLING,
-            callback= _on_edge,
+            callback= on_press,
             bouncetime=BUTTON_BOUNCE_TIME
         )
         
