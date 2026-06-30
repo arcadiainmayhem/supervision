@@ -40,7 +40,10 @@ class LEDManager():
             return
         
         if self.serial is None:
-            return
+            self._reconnect()
+            if self.serial is None:
+                return
+            
 
         try:
             self.serial.write(f"{state.value.upper()}\n".encode())
