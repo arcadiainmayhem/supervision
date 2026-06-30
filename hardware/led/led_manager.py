@@ -38,17 +38,16 @@ class LEDManager():
         if DEV_MODE:
             print(f"[LEDMANAGER] ESP32 State: {state.value.upper()}")
             return
+        
+        if self.serial is None:
+            return
 
-        if self.serial:
-            try:
-                self.serial.write(f"{state.value.upper()}\n".encode())
-            except (OSError, serial.SerialException) as e:
-                print(f"[LEDMANAGER] Serial write failed: {e} - reconnecting")
-                self._reconnect()
-                try:
-                    self.serial.write(f"{state.value.upper()}\n".encode())
-                except (OSError, serial.SerialException) as e2:
-                    print(f"[LEDMANAGER] Retry failed: {e2}")
+        try:
+            self.serial.write(f"{state.value.upper()}\n".encode())
+        except (OSError, serial.SerialException) as e:
+             print(f"[LEDMANAGER] Serial write failed: {e} - reconnecting")
+             self._reconnect()
+ 
 
     def _reconnect(self):
         try:
