@@ -10,7 +10,7 @@ def create_visitor_state(visitor_number):
     #General & Administrative
     #identity
     "visitor_number" : visitor_number,
-
+    "fallback_used" : False,
     #Observation
     "camera_frame" : None,
     "detected_results" : None,

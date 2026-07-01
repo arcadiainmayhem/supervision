@@ -178,6 +178,11 @@ class ObeliskDirector():
         try:
             with self._frame_lock: #locks the room
                 frame = self.lastest_frame #copy whatever is there
+
+                #not using fallback as theres frame
+                print("[OBELISKDIRECTOR] Not using fallback image ")
+                visitor["fallback_used"] = False
+
                 visitor["dwell_count"] = self.dwell_count
                 visitor["stillness_variable"] = self.stillness_variable
                 self.dwell_count = 0 #reset for next visitor
@@ -185,6 +190,9 @@ class ObeliskDirector():
 
             if frame is None:
                 print(f"[OBELISKDIRECTOR][OBSERVE] No frame available, using Fallback")
+                #set fallback to true
+                visitor["fallback_used"] = True
+                print("[OBELISKDIRECTOR] Using fallback image ")
                 frame = load_image(FALLBACK_IMAGE_PATH)
             else:
                 print(f"[OBELISKDIRECTOR][OBSERVE] Frame grabbed - Shape : {frame.shape}")
@@ -311,7 +319,7 @@ class ObeliskDirector():
             printer_status = check.stdout.strip()
             print(f"[SELPHYPRINTER] Printer Status : {printer_status}")
    
-            #quits queue if printerstatus fails
+            #quits queue if printer status fails
             if "error" in printer_status.lower() or "disabled" in printer_status.lower():
                 status_logger.update_status("printer" , "error")
                 status_logger.log_error("Selphy" ,printer_status)

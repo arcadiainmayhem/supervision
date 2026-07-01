@@ -148,7 +148,7 @@ class InstallationDirector :
             if not success:
                 print(f"[INSTALLATIONDIRECTOR] Print failed — flagged, ready for next ")
                 self.led_manager.set_state(LEDState.ERROR)
-                status_logger.log_error("[INSTALLATIONDIRECTOR] Installation Director , Print Failed")
+                status_logger.log_error("[INSTALLATIONDIRECTOR]"," Installation Director , Print Failed")
                 status_logger.update_status("state","error")
                 return #exits try -> finally resets flags 
 
@@ -184,7 +184,7 @@ class InstallationDirector :
 
             print(f"Encounter Failed: {e}")
             #[UPDATE SERVER STATUS]
-            status_logger.log_error(f"Installation Director: " ,str(e)) 
+            status_logger.log_error(f"Installation Director:", str(e)) 
             status_logger.update_status("state" , "error")
  
             #prints full error with exact file

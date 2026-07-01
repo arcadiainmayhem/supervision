@@ -28,11 +28,17 @@ def decide(visitor):
     body = visitor["body_detected"]
     gated = (not face and not body)
 
+
+
     #== RARITY (item 5) — thresholds against real 0–1 base
-    if not gated and final_score >= RARITY_RARE_MIN:
+
+    if visitor["fallback_used"]:
+        visitor["unlocked_rarity_tier"] = ["common", "uncommon", "rare"]
+    elif not gated and final_score >= RARITY_RARE_MIN:
         visitor["unlocked_rarity_tier"] = ["common", "uncommon", "rare"]
     elif final_score >= RARITY_UNCOMMON_MIN:
         visitor["unlocked_rarity_tier"] = ["common", "uncommon"]
+  
     else:
         visitor["unlocked_rarity_tier"] = ["common"]
  
