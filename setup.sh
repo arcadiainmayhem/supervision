@@ -36,6 +36,9 @@ wget -q https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_lan
 wget -q https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task
 wget https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
 
+#prevents random enumeration of usb
+sudo systemctl mask ipp-usb.socket ipp-usb.service
+
 #system package for Thermal Printer
 sudo apt install libusb-1.0-0 -y
 sudo usermod -aG lp arcadia

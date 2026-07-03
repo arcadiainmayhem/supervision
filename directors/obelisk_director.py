@@ -334,6 +334,8 @@ class ObeliskDirector():
                                      capture_output=True , 
                                      text = True)
 
+
+
             print("Selphy Print Sent Successful")
             #[UPDATE STATUS OF PRINTER]
             status_logger.update_status("printer" , "printing")
