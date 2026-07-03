@@ -19,8 +19,9 @@ def register_trigger_button(on_press):
         keyboard.add_hotkey('space',on_press)
         print("Trigger Button Ready")
     else:
+        #set it to pin number
         GPIO.setmode(GPIO.BCM)
-
+        #setup GPIO
         GPIO.setup(BUTTON_TRIGGER_PIN, GPIO.IN , pull_up_down= GPIO.PUD_UP)
 
         GPIO.remove_event_detect(BUTTON_TRIGGER_PIN)  # clear buffer + remove old
