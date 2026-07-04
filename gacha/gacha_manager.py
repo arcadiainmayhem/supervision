@@ -69,10 +69,10 @@ class GachaManager():
         
         #unsure about this 
         if current_hour >= GACHA_GUARANTEED_HOUR:
-            return 0.60
+            return 0.95
 
         #base window - ramp increases each hour
         hours_elapsed = current_hour - GACHA_WINDOW_START
         probabilty = GACHA_BASE_PROBABLITY + (hours_elapsed * GACHA_RAMP_RATE)
 
-        return min(probabilty , 0.60)
+        return min(probabilty , 0.95)

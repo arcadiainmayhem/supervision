@@ -16,7 +16,7 @@ else:
 def register_trigger_button(on_press):
     if DEV_MODE:
         print("Dev mode - press SPACE to trigger")
-        keyboard.add_hotkey('space',on_press)
+        keyboard.add_hotkey('a',on_press)
         print("Trigger Button Ready")
     else:
         #set it to pin number
